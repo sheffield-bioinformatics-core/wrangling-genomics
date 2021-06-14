@@ -139,9 +139,9 @@ discard any reads that do not have at least 25 bases remaining after
 this trimming step. This command will take a few minutes to run.
 
 ~~~
-$ trimmomatic PE SRR2589044_1.fastq.gz SRR2589044_2.fastq.gz \
-                SRR2589044_1.trim.fastq.gz SRR2589044_1un.trim.fastq.gz \
-                SRR2589044_2.trim.fastq.gz SRR2589044_2un.trim.fastq.gz \
+$ trimmomatic PE -phred33 NA12873_R1.fq NA12873_R2.fq.gz \
+                NA12873_R1.trim.fq.gz NA12873_R1un.trim.fq.gz \
+                NA12873_R2.trim.fq.gz NA12873_R2un.trim.fq.gz \
                 SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
 ~~~
 {: .bash}
@@ -149,16 +149,15 @@ $ trimmomatic PE SRR2589044_1.fastq.gz SRR2589044_2.fastq.gz \
 
 ~~~
 TrimmomaticPE: Started with arguments:
- SRR2589044_1.fastq.gz SRR2589044_2.fastq.gz SRR2589044_1.trim.fastq.gz SRR2589044_1un.trim.fastq.gz SRR2589044_2.trim.fastq.gz SRR2589044_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
-Multiple cores found: Using 2 threads
+ -phred33 NA12873_R1.fq NA12873_R2.fq NA12873_R1.trim.fq.gz NA12873_R1un.trim.fq.gz NA12873_R2.trim.fq.gz NA12873_R2un.trim.fq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
+Multiple cores found: Using 4 threads
 Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
 Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
 Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
 Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
 Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
 ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
-Quality encoding detected as phred33
-Input Read Pairs: 1107090 Both Surviving: 885220 (79.96%) Forward Only Surviving: 216472 (19.55%) Reverse Only Surviving: 2850 (0.26%) Dropped: 2548 (0.23%)
+Input Read Pairs: 30000 Both Surviving: 26344 (87.81%) Forward Only Surviving: 259 (0.86%) Reverse Only Surviving: 2920 (9.73%) Dropped: 477 (1.59%)
 TrimmomaticPE: Completed successfully
 ~~~
 {: .output}
@@ -172,25 +171,22 @@ TrimmomaticPE: Completed successfully
 > 2) What percent of reads did we keep both pairs?
 >
 >> ## Solution
->> 1) 0.23%
->> 2) 79.96%
+>> 1) 1.59%
+>> 2) 87.81%
 > {: .solution}
 {: .challenge}
-
-You may have noticed that Trimmomatic automatically detected the
-quality encoding of our sample. It is always a good idea to
-double-check this or to enter the quality encoding manually.
 
 We can confirm that we have our output files:
 
 ~~~
-$ ls SRR2589044*
+$ ls NA12873_R*
 ~~~
 {: .bash}
 
 ~~~
-SRR2589044_1.fastq.gz       SRR2589044_1un.trim.fastq.gz  SRR2589044_2.trim.fastq.gz
-SRR2589044_1.trim.fastq.gz  SRR2589044_2.fastq.gz         SRR2589044_2un.trim.fastq.gz
+NA12873_R1.fq           NA12873_R1_fastqc.zip    NA12873_R2.trim.fq.gz   NA12873_R2un.trim.fq.gz
+NA12873_R1.trim.fq.gz   NA12873_R1un.trim.fq.gz  NA12873_R2_fastqc.html
+NA12873_R1_fastqc.html  NA12873_R2.fq.gz         NA12873_R2_fastqc.zip
 ~~~
 {: .output}
 
@@ -198,17 +194,21 @@ The output files are also FASTQ files. It should be smaller than our
 input file, because we've removed reads. We can confirm this:
 
 ~~~
-$ ls SRR2589044* -l -h
+$ ls NA12873_R* -l -h
 ~~~
 {: .bash}
 
 ~~~
--rw-rw-r-- 1 dcuser dcuser 124M Jul  6 20:22 SRR2589044_1.fastq.gz
--rw-rw-r-- 1 dcuser dcuser  94M Jul  6 22:33 SRR2589044_1.trim.fastq.gz
--rw-rw-r-- 1 dcuser dcuser  18M Jul  6 22:33 SRR2589044_1un.trim.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 128M Jul  6 20:24 SRR2589044_2.fastq.gz
--rw-rw-r-- 1 dcuser dcuser  91M Jul  6 22:33 SRR2589044_2.trim.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 271K Jul  6 22:33 SRR2589044_2un.trim.fastq.gz
+-rwxrwxrwx 1 root root 6.5M Jun 11 13:57 NA12873_R1.fq
+-rw-r--r-- 1 root root 2.4M Jun 14 14:28 NA12873_R1.trim.fq.gz
+-rw-r--r-- 1 root root 585K Jun 14 11:05 NA12873_R1_fastqc.html
+-rw-r--r-- 1 root root 329K Jun 14 11:05 NA12873_R1_fastqc.zip
+-rw-r--r-- 1 root root  21K Jun 14 14:28 NA12873_R1un.trim.fq.gz
+-rwxrwxrwx 1 root root 6.5M Jun 11 13:57 NA12873_R2.fq.gz
+-rw-r--r-- 1 root root 2.4M Jun 14 14:28 NA12873_R2.trim.fq.gz
+-rw-r--r-- 1 root root 660K Jun 14 11:05 NA12873_R2_fastqc.html
+-rw-r--r-- 1 root root 354K Jun 14 11:05 NA12873_R2_fastqc.zip
+-rw-r--r-- 1 root root 221K Jun 14 14:28 NA12873_R2un.trim.fq.gz
 ~~~
 {: .output}
 
@@ -222,17 +222,17 @@ quickly!
 We unzipped one of our files before to work with it, let's compress it again before we run our for loop.
 
 ~~~
-gzip SRR2584863_1.fastq 
+gzip NA12873_R1.fq 
 ~~~
 {: .bash}
 
 ~~~
-$ for infile in *_1.fastq.gz
+$ for infile in *_R1.fq.gz
 > do
->   base=$(basename ${infile} _1.fastq.gz)
->   trimmomatic PE ${infile} ${base}_2.fastq.gz \
->                ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz \
->                ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz \
+>   base=$(basename ${infile} _R1.fq.gz)
+>   trimmomatic PE ${infile} ${base}_2.fq.gz \
+>                ${base}_1.trim.fq.gz ${base}_1un.trim.fq.gz \
+>                ${base}_2.trim.fq.gz ${base}_2un.trim.fq.gz \
 >                SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
 > done
 ~~~
@@ -241,7 +241,7 @@ $ for infile in *_1.fastq.gz
 
 Go ahead and run the for loop. It should take a few minutes for
 Trimmomatic to run for each of our six input files. Once it's done
-running, take a look at your directory contents. You'll notice that even though we ran Trimmomatic on file `SRR2589044` before running the for loop, there is only one set of files for it. Because we matched the ending `_1.fastq.gz`, we re-ran Trimmomatic on this file, overwriting our first results. That's ok, but it's good to be aware that it happened.
+running, take a look at your directory contents. You'll notice that even though we ran Trimmomatic on file `NA12973` before running the for loop, there is only one set of files for it. Because we matched the ending `_1.fq.gz`, we re-ran Trimmomatic on this file, overwriting our first results. That's ok, but it's good to be aware that it happened.
 
 ~~~
 $ ls
@@ -249,13 +249,19 @@ $ ls
 {: .bash}
 
 ~~~
-NexteraPE-PE.fa               SRR2584866_1.fastq.gz         SRR2589044_1.trim.fastq.gz
-SRR2584863_1.fastq.gz         SRR2584866_1.trim.fastq.gz    SRR2589044_1un.trim.fastq.gz
-SRR2584863_1.trim.fastq.gz    SRR2584866_1un.trim.fastq.gz  SRR2589044_2.fastq.gz
-SRR2584863_1un.trim.fastq.gz  SRR2584866_2.fastq.gz         SRR2589044_2.trim.fastq.gz
-SRR2584863_2.fastq.gz         SRR2584866_2.trim.fastq.gz    SRR2589044_2un.trim.fastq.gz
-SRR2584863_2.trim.fastq.gz    SRR2584866_2un.trim.fastq.gz
-SRR2584863_2un.trim.fastq.gz  SRR2589044_1.fastq.gz
+NA12873_1.trim.fq.gz     NA12873_R2_fastqc.zip           NA12874_R1.fq.gz        NA12878_R1_fastqc.zip
+NA12873_1untrim.fq.gz    NA12873_R2un.trim.fq.gz         NA12874_R1_fastqc.html  NA12878_R2.fq.gz
+NA12873_2.trim.fq.gz     NA12873_trimmed_R1.fq           NA12874_R1_fastqc.zip   NA12878_R2_fastqc.html
+NA12873_2untrim.fq.gz    NA12873_trimmed_R1_fastqc.html  NA12874_R2.fq.gz        NA12878_R2_fastqc.zip
+NA12873_R1.fq.gz         NA12873_trimmed_R1_fastqc.zip   NA12874_R2_fastqc.html  NexteraPE-PE.fa
+NA12873_R1.trim.fq.gz    NA12873_trimmed_R2.fq           NA12874_R2_fastqc.zip   SRR622461_1.filt.fastq.gz
+NA12873_R1_fastqc.html   NA12873_untrimmed_R1.fq         NA12878_1.trim.fq.gz    multiqc_data
+NA12873_R1_fastqc.zip    NA12873_untrimmed_R2.fq         NA12878_1untrim.fq.gz   multiqc_report.html
+NA12873_R1un.trim.fq.gz  NA12874_1.trim.fq.gz            NA12878_2.trim.fq.gz    qc_report
+NA12873_R2.fq.gz         NA12874_1untrim.fq.gz           NA12878_2untrim.fq.gz
+NA12873_R2.trim.fq.gz    NA12874_2.trim.fq.gz            NA12878_R1.fq.gz
+NA12873_R2_fastqc.html   NA12874_2untrim.fq.gz           NA12878_R1_fastqc.html
+
 ~~~
 {: .output}
 
