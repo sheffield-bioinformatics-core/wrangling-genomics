@@ -11,6 +11,8 @@ objectives:
 keypoints:
 - "It's important to record and understand your experiment's metadata."
 ---
+<img src="../img/logo-sm.png" align=right>
+
 
 # Background
 
@@ -51,12 +53,13 @@ This metadata describes information on the samples sequences as part of the data
 | Data collections            | Which datasets the sample belongs to		|
 
 
+<div class="exercise">
 
 > ## Challenge
 > 
 > Based on the metadata, can you answer the following questions?
 > 
-> 1. How many different generations exist in the data?
+> 1. How many different populations exist in the data?
 > 2. How many rows and how many columns are in this data?
 > 3. How many citrate+ mutants have been recorded in **Ara-3**?
 > 4. How many hypermutable mutants have been recorded in **Ara-3**?
@@ -69,6 +72,8 @@ This metadata describes information on the samples sequences as part of the data
 > > 4. 6 hypermutable mutants
 > {: .solution}
 {: .challenge}
+
+</div>
 
 <!-- can add some additional info relevant to interplay of hypermutability and Cit+ adaptations, but keep it simple for now -->
 

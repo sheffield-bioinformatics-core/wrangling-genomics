@@ -10,8 +10,9 @@ objectives:
 - "Use `for` loops to automate operations on multiple files."
 keypoints:
 - "Quality encodings vary across sequencing platforms."
-- "`for` loops let you perform the same set of operations on multiple files with a single command."
+- "fastqc and multiqc can generate quality control reports for sequencing data"
 ---
+<img src="../img/logo-sm.png" align=right>
 
 # Bioinformatic workflows
 
@@ -81,7 +82,7 @@ curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2584866/SRR2584866_2.fa
 The data comes in a compressed format, which is why there is a `.gz` at the end of the file names. This makes it faster to transfer, and allows it to take up less space on our computer. Let's unzip one of the files so that we can look at the fastq format.
 
 ~~~
-$ gunzip SRR2584863_1.fastq.gz 
+$ gunzip NA128731_R1.fq.gz
 ~~~
 {: .bash}
 
@@ -107,15 +108,15 @@ We can view the first complete read in one of the files our dataset by using `he
 the first four lines. 
 
 ~~~
-$ head -n 4 SRR2584863_1.fastq 
+$ head -n 4 NA128731_R1.fastq 
 ~~~
 {: .bash}
 
 ~~~
-@SRR2584863.1 HWI-ST957:244:H73TDADXX:1:1101:4712:2181/1
-TTCACATCCTGACCATTCAGTTGAGCAAAATAGTTCTTCAGTGCCTGTTTAACCGAGTCACGCAGGGGTTTTTGGGTTACCTGATCCTGAGAGTTAACGGTAGAAACGGTCAGTACGTCAGAATTTACGCGTTGTTCGAACATAGTTCTG
+@SRR768307.13/1
+AGCCCTCACAGGAGGCAAGATTGGGTTCTGGGCTGGCATTTGATGGAGGAAGCCTGGATAGTTTCTCTTGCTATCAGCGGGCAGCAGCTGGAAGGAAATGT
 +
-CCCFFFFFGHHHHJIJJJJIJJJIIJJJJIIIJJGFIIIJEDDFEGGJIFHHJIJJDECCGGEGIIJFHFFFACD:BBBDDACCCCAA@@CA@C>C3>@5(8&>C:9?8+89<4(:83825C(:A#########################
+2KJBEHFFEEDG@DGHCCEDGGABFFGHEHIGHEDGBGGFHIFFEHFHC5DHIIKJLHIIGBDFGKIHDGKJ<GEL>J@HHCAKJKIEFEKH=FEE#####
 ~~~
 {: .output}
 
@@ -127,7 +128,7 @@ represents the numerical quality score for an individual nucleotide. For example
 above, the quality score line is: 
 
 ~~~
-CCCFFFFFGHHHHJIJJJJIJJJIIJJJJIIIJJGFIIIJEDDFEGGJIFHHJIJJDECCGGEGIIJFHFFFACD:BBBDDACCCCAA@@CA@C>C3>@5(8&>C:9?8+89<4(:83825C(:A#########################
+2KJBEHFFEEDG@DGHCCEDGGABFFGHEHIGHEDGBGGFHIFFEHFHC5DHIIKJLHIIGBDFGKIHDGKJ<GEL>J@HHCAKJKIEFEKH=FEE#####
 ~~~
 {: .output}
 
@@ -153,10 +154,10 @@ much signal was captured for the base incorporation.
 Looking back at our read: 
 
 ~~~
-@SRR2584863.1 HWI-ST957:244:H73TDADXX:1:1101:4712:2181/1
-TTCACATCCTGACCATTCAGTTGAGCAAAATAGTTCTTCAGTGCCTGTTTAACCGAGTCACGCAGGGGTTTTTGGGTTACCTGATCCTGAGAGTTAACGGTAGAAACGGTCAGTACGTCAGAATTTACGCGTTGTTCGAACATAGTTCTG
+@SRR768307.13/1
+AGCCCTCACAGGAGGCAAGATTGGGTTCTGGGCTGGCATTTGATGGAGGAAGCCTGGATAGTTTCTCTTGCTATCAGCGGGCAGCAGCTGGAAGGAAATGT
 +
-CCCFFFFFGHHHHJIJJJJIJJJIIJJJJIIIJJGFIIIJEDDFEGGJIFHHJIJJDECCGGEGIIJFHFFFACD:BBBDDACCCCAA@@CA@C>C3>@5(8&>C:9?8+89<4(:83825C(:A#########################
+2KJBEHFFEEDG@DGHCCEDGGABFFGHEHIGHEDGBGGFHIFFEHFHC5DHIIKJLHIIGBDFGKIHDGKJ<GEL>J@HHCAKJKIEFEKH=FEE#####
 ~~~
 {: .output}
 
@@ -165,12 +166,12 @@ very poor (`#` = a quality score of 2).
 
 > ## Exercise
 > 
-> What is the last read in the `SRR2584863_1.fastq ` file? How confident
+> What is the last read in the `NA12873_R1.fq ` file? How confident
 > are you in this read? 
 > 
 >> ## Solution
 >> ~~~
->> $ tail -n 4 SRR2584863_1.fastq 
+>> $ tail -n 4 NA12873_R1.fq 
 >> ~~~
 >> {: .bash}
 >> 
@@ -375,16 +376,17 @@ $ cd ~/dc_workshop/data/untrimmed_fastq/
 >> {: .bash}
 >> 
 >> ~~~
->> -rw-rw-r-- 1 dcuser dcuser 545M Jul  6 20:27 SRR2584863_1.fastq
->> -rw-rw-r-- 1 dcuser dcuser 183M Jul  6 20:29 SRR2584863_2.fastq.gz
->> -rw-rw-r-- 1 dcuser dcuser 309M Jul  6 20:34 SRR2584866_1.fastq.gz
->> -rw-rw-r-- 1 dcuser dcuser 296M Jul  6 20:37 SRR2584866_2.fastq.gz
->> -rw-rw-r-- 1 dcuser dcuser 124M Jul  6 20:22 SRR2589044_1.fastq.gz
->> -rw-rw-r-- 1 dcuser dcuser 128M Jul  6 20:24 SRR2589044_2.fastq.gz
+>> total 4.3G
+>> -rwxrwxrwx 1 root root 6.5M Jun 11 13:57 NA12873_R1.fq
+>> -rwxrwxrwx 1 root root 2.9M Jun 11 13:57 NA12873_R2.fq.gz
+>> -rwxrwxrwx 1 root root 2.7M Jun 11 13:54 NA12874_R1.fq.gz
+>> -rwxrwxrwx 1 root root 2.7M Jun 11 13:54 NA12874_R2.fq.gz
+>> -rwxrwxrwx 1 root root 2.1M Jun 11 13:49 NA12878_R1.fq.gz
+>> -rwxrwxrwx 1 root root 2.2M Jun 11 13:49 NA12878_R2.fq.gz
 >> ~~~
 >> {: .output}
 >> 
->> There are six FASTQ files ranging from 124M (124MB) to 545M. 
+>> There are six FASTQ files ranging from 2.2M  to 6.5M. 
 >> 
 > {: .solution}
 {: .challenge}
@@ -392,7 +394,7 @@ $ cd ~/dc_workshop/data/untrimmed_fastq/
 FastQC can accept multiple file names as input, and on both zipped and unzipped files, so we can use the \*.fastq* wildcard to run FastQC on all of the FASTQ files in this directory.
 
 ~~~
-$ fastqc *.fastq* 
+$ fastqc *.fq* 
 ~~~
 {: .bash}
 
@@ -400,16 +402,7 @@ You will see an automatically updating output message telling you the
 progress of the analysis. It will start like this: 
 
 ~~~
-Started analysis of SRR2584863_1.fastq
-Approx 5% complete for SRR2584863_1.fastq
-Approx 10% complete for SRR2584863_1.fastq
-Approx 15% complete for SRR2584863_1.fastq
-Approx 20% complete for SRR2584863_1.fastq
-Approx 25% complete for SRR2584863_1.fastq
-Approx 30% complete for SRR2584863_1.fastq
-Approx 35% complete for SRR2584863_1.fastq
-Approx 40% complete for SRR2584863_1.fastq
-Approx 45% complete for SRR2584863_1.fastq
+
 ~~~
 {: .output}
 
@@ -418,11 +411,13 @@ six of our FASTQ files. When the analysis completes, your prompt
 will return. So your screen will look something like this:
 
 ~~~
-Approx 80% complete for SRR2589044_2.fastq.gz
-Approx 85% complete for SRR2589044_2.fastq.gz
-Approx 90% complete for SRR2589044_2.fastq.gz
-Approx 95% complete for SRR2589044_2.fastq.gz
-Analysis complete for SRR2589044_2.fastq.gz
+Approx 75% complete for NA12878_R2.fq.gz
+Approx 80% complete for NA12878_R2.fq.gz
+Approx 85% complete for NA12878_R2.fq.gz
+Approx 90% complete for NA12878_R2.fq.gz
+Approx 95% complete for NA12878_R2.fq.gz
+Approx 100% complete for NA12878_R2.fq.gz
+Analysis complete for NA12878_R2.fq.gz
 $
 ~~~
 {: .output}
@@ -436,12 +431,13 @@ $ ls
 {: .bash}
 
 ~~~
-SRR2584863_1.fastq        SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_1_fastqc.zip   SRR2584866_1.fastq.gz     SRR2589044_1.fastq.gz
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
-SRR2584863_2.fastq.gz     SRR2584866_2.fastq.gz     SRR2589044_2.fastq.gz
+NA12873_R1.fq           NA12874_R1_fastqc.html  NA12878_R1_fastqc.zip
+NA12873_R1_fastqc.html  NA12874_R1_fastqc.zip   NA12878_R2.fq.gz
+NA12873_R1_fastqc.zip   NA12874_R2.fq.gz        NA12878_R2_fastqc.html
+NA12873_R2.fq.gz        NA12874_R2_fastqc.html  NA12878_R2_fastqc.zip
+NA12873_R2_fastqc.html  NA12874_R2_fastqc.zip   SRR622461_1.filt.fastq.gz
+NA12873_R2_fastqc.zip   NA12878_R1.fq.gz
+NA12874_R1.fq.gz        NA12878_R1_fastqc.html
 ~~~
 {: .output}
 
@@ -469,6 +465,8 @@ inspection of our output files.
 $ cd ~/dc_workshop/results/fastqc_untrimmed_reads/ 
 ~~~
 {: .bash}
+
+
 
 ## Viewing the FastQC results
 
@@ -522,12 +520,12 @@ directory we just created `~/Desktop/fastqc_html`.
 You should see a status output like this:
 
 ~~~
-SRR2584863_1_fastqc.html                      100%  249KB 152.3KB/s   00:01    
-SRR2584863_2_fastqc.html                      100%  254KB 219.8KB/s   00:01    
-SRR2584866_1_fastqc.html                      100%  254KB 271.8KB/s   00:00    
-SRR2584866_2_fastqc.html                      100%  251KB 252.8KB/s   00:00    
-SRR2589044_1_fastqc.html                      100%  249KB 370.1KB/s   00:00    
-SRR2589044_2_fastqc.html                      100%  251KB 592.2KB/s   00:00  
+NA12873_R1_fastqc.html                      100%  249KB 152.3KB/s   00:01    
+NA12873_R2_fastqc.html                      100%  254KB 219.8KB/s   00:01    
+NA12874_R1_fastqc.html                      100%  254KB 271.8KB/s   00:00    
+NA12874_R2_fastqc.html                      100%  251KB 252.8KB/s   00:00    
+NA12878_R1_fastqc.html                      100%  249KB 370.1KB/s   00:00    
+NA12878_R2_fastqc.html                      100%  251KB 592.2KB/s   00:00  
 ~~~
 {: .output}
 
@@ -563,223 +561,25 @@ We've now looked at quite a few "Per base sequence quality" FastQC graphs, but t
 + [**Adapter Content**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/10%20Adapter%20Content.html): a graph indicating where adapater sequences occur in the reads.
 + [**K-mer Content**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/11%20Kmer%20Content.html): a graph showing any sequences which may show a positional bias within the reads.
 
-## Working with the FastQC text output
-
-Now that we've looked at our HTML reports to get a feel for the data,
-let's look more closely at the other output files. Go back to the tab
-in your terminal program that is connected to your AWS instance
-(the tab label will start with `dcuser@ip`) and make sure you're in
-our results subdirectory.   
-
-~~~
-$ cd ~/dc_workshop/results/fastqc_untrimmed_reads/ 
-$ ls 
-~~~
-{: .bash}
-
-~~~
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.zip   SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
-~~~
-{: .output}
-
-Our `.zip` files are compressed files. They each contain multiple 
-different types of output files for a single input FASTQ file. To
-view the contents of a `.zip` file, we can use the program `unzip` 
-to decompress these files. Let's try doing them all at once using a
-wildcard.
-
-~~~
-$ unzip *.zip 
-~~~
-{: .bash}
-
-~~~
-Archive:  SRR2584863_1_fastqc.zip
-caution: filename not matched:  SRR2584863_2_fastqc.zip
-caution: filename not matched:  SRR2584866_1_fastqc.zip
-caution: filename not matched:  SRR2584866_2_fastqc.zip
-caution: filename not matched:  SRR2589044_1_fastqc.zip
-caution: filename not matched:  SRR2589044_2_fastqc.zip
-~~~
-{: .output}
-
-This didn't work. We unzipped the first file and then got a warning
-message for each of the other `.zip` files. This is because `unzip` 
-expects to get only one zip file as input. We could go through and 
-unzip each file one at a time, but this is very time consuming and 
-error-prone. Someday you may have 500 files to unzip!
-
-A more efficient way is to use a `for` loop like we learned in the Shell Genomics lesson to iterate through all of
-our `.zip` files. Let's see what that looks like and then we'll 
-discuss what we're doing with each line of our loop.
-
-~~~
-$ for filename in *.zip
-> do
-> unzip $filename
-> done
-~~~
-{: .bash}
-
-In this example, the input is six filenames (one filename for each of our `.zip` files).
-Each time the loop iterates, it will assign a file name to the variable `filename`
-and run the `unzip` command.
-The first time through the loop,
-`$filename` is `SRR2584863_1_fastqc.zip`. 
-The interpreter runs the command `unzip` on `SRR2584863_1_fastqc.zip`.
-For the second iteration, `$filename` becomes 
-`SRR2584863_2_fastqc.zip`. This time, the shell runs `unzip` on `SRR2584863_2_fastqc.zip`.
-It then repeats this process for the four other `.zip` files in our directory.
-
-
-When we run our `for` loop, you will see output that starts like this:
-
-~~~
-Archive:  SRR2589044_2_fastqc.zip
-   creating: SRR2589044_2_fastqc/
-   creating: SRR2589044_2_fastqc/Icons/
-   creating: SRR2589044_2_fastqc/Images/
-  inflating: SRR2589044_2_fastqc/Icons/fastqc_icon.png  
-  inflating: SRR2589044_2_fastqc/Icons/warning.png  
-  inflating: SRR2589044_2_fastqc/Icons/error.png  
-  inflating: SRR2589044_2_fastqc/Icons/tick.png  
-  inflating: SRR2589044_2_fastqc/summary.txt  
-  inflating: SRR2589044_2_fastqc/Images/per_base_quality.png  
-  inflating: SRR2589044_2_fastqc/Images/per_tile_quality.png  
-  inflating: SRR2589044_2_fastqc/Images/per_sequence_quality.png  
-  inflating: SRR2589044_2_fastqc/Images/per_base_sequence_content.png  
-  inflating: SRR2589044_2_fastqc/Images/per_sequence_gc_content.png  
-  inflating: SRR2589044_2_fastqc/Images/per_base_n_content.png  
-  inflating: SRR2589044_2_fastqc/Images/sequence_length_distribution.png  
-  inflating: SRR2589044_2_fastqc/Images/duplication_levels.png  
-  inflating: SRR2589044_2_fastqc/Images/adapter_content.png  
-  inflating: SRR2589044_2_fastqc/fastqc_report.html  
-  inflating: SRR2589044_2_fastqc/fastqc_data.txt  
-  inflating: SRR2589044_2_fastqc/fastqc.fo  
-~~~
-{: .output}
-
-The `unzip` program is decompressing the `.zip` files and creating
-a new directory (with subdirectories) for each of our samples, to 
-store all of the different output that is produced by FastQC. There
-are a lot of files here. The one we're going to focus on is the 
-`summary.txt` file. 
-
-If you list the files in our directory now you will see: 
-
-~~~
-SRR2584863_1_fastqc       SRR2584866_1_fastqc       SRR2589044_1_fastqc
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.zip   SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_2_fastqc       SRR2584866_2_fastqc       SRR2589044_2_fastqc
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
-~~~
-{:. output}
-
-The `.html` files and the uncompressed `.zip` files are still present,
-but now we also have a new directory for each of our samples. We can 
-see for sure that it's a directory if we use the `-F` flag for `ls`. 
-
-~~~
-$ ls -F 
-~~~
-{: .bash}
-
-~~~
-SRR2584863_1_fastqc/      SRR2584866_1_fastqc/      SRR2589044_1_fastqc/
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.zip   SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_2_fastqc/      SRR2584866_2_fastqc/      SRR2589044_2_fastqc/
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
-~~~
-{: .output}
-
-Let's see what files are present within one of these output directories.
-
-~~~
-$ ls -F SRR2584863_1_fastqc/ 
-~~~
-{: .bash}
-
-~~~
-fastqc_data.txt  fastqc.fo  fastqc_report.html	Icons/	Images/  summary.txt
-~~~
-{: .output}
-
-Use `less` to preview the `summary.txt` file for this sample. 
-
-~~~
-$ less SRR2584863_1_fastqc/summary.txt 
-~~~
-{: .bash}
-
-~~~
-PASS    Basic Statistics        SRR2584863_1.fastq
-PASS    Per base sequence quality       SRR2584863_1.fastq
-PASS    Per tile sequence quality       SRR2584863_1.fastq
-PASS    Per sequence quality scores     SRR2584863_1.fastq
-WARN    Per base sequence content       SRR2584863_1.fastq
-WARN    Per sequence GC content SRR2584863_1.fastq
-PASS    Per base N content      SRR2584863_1.fastq
-PASS    Sequence Length Distribution    SRR2584863_1.fastq
-PASS    Sequence Duplication Levels     SRR2584863_1.fastq
-PASS    Overrepresented sequences       SRR2584863_1.fastq
-WARN    Adapter Content SRR2584863_1.fastq
-~~~
-{: .output}
-
-The summary file gives us a list of tests that FastQC ran, and tells
-us whether this sample passed, failed, or is borderline (`WARN`). Remember, to quit from `less` you must type `q`.
-
-## Documenting Our Work
-
-We can make a record of the results we obtained for all our samples
-by concatenating all of our `summary.txt` files into a single file 
-using the `cat` command. We'll call this `fastqc_summaries.txt` and move
-it to `~/dc_workshop/docs`.
-
-~~~
-$ cat */summary.txt > ~/dc_workshop/docs/fastqc_summaries.txt 
-~~~
-{: .bash}
 
 > ## Exercise
 > 
-> Which samples failed at least one of FastQC's quality tests? What
-> test(s) did those samples fail?
->
+> The multiqc tool can be used to combine multiple QC reports onto a single page to make
+> comparisons easier. Consult the help page for the multiqc tool and generate a QC report from 
+> the fastqc files
+> ~~~ 
+> $ multiqc -h
+> ~~~
+
 >> ## Solution
 >> 
 >> We can get the list of all failed tests using `grep`. 
 >> 
 >> ~~~ 
->> $ cd ~/dc_workshop/docs
->> $ grep FAIL fastqc_summaries.txt
+>> $ multiqc .
 >> ~~~
 >> {: .bash}
 >> 
->> ~~~
->> FAIL    Per base sequence quality       SRR2584863_2.fastq.gz
->> FAIL    Per tile sequence quality       SRR2584863_2.fastq.gz
->> FAIL    Per base sequence content       SRR2584863_2.fastq.gz
->> FAIL    Per base sequence quality       SRR2584866_1.fastq.gz
->> FAIL    Per base sequence content       SRR2584866_1.fastq.gz
->> FAIL    Adapter Content SRR2584866_1.fastq.gz
->> FAIL    Adapter Content SRR2584866_2.fastq.gz
->> FAIL    Adapter Content SRR2589044_1.fastq.gz
->> FAIL    Per base sequence quality       SRR2589044_2.fastq.gz
->> FAIL    Per tile sequence quality       SRR2589044_2.fastq.gz
->> FAIL    Per base sequence content       SRR2589044_2.fastq.gz
->> FAIL    Adapter Content SRR2589044_2.fastq.gz
->> ~~~
->> {: .output}
->> 
-> {: .solution}
 {: .challenge}
 
 
