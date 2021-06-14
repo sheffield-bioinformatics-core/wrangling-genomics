@@ -10,6 +10,16 @@ objectives:
 - "Understand the data set."
 keypoints:
 - "It's important to record and understand your experiment's metadata."
+output:
+  html_notebook:
+    toc: yes
+    toc_float: yes
+    css: ../stylesheets/styles.css
+  html_document:
+    df_print: paged
+    toc: yes
+editor_options:
+  chunk_output_type: inline
 ---
 <img src="../img/logo-sm.png" align=right>
 
