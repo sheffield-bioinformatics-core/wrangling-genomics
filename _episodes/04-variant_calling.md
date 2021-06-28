@@ -38,37 +38,29 @@ First we download the reference genome for *E. coli* REL606. Although we could c
 ~~~
 $ cd ~/dc_workshop
 $ mkdir -p data/ref_genome
-$ curl -L -o data/ref_genome/ecoli_rel606.fasta.gz ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/017/985/GCA_000017985.1_ASM1798v1/GCA_000017985.1_ASM1798v1_genomic.fna.gz
-$ gunzip data/ref_genome/ecoli_rel606.fasta.gz
+$ curl -L -o data/ref_genome/chr20.fa.gz https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr20.fa.gz
+$ gunzip data/ref_genome/chr20.fa.gz
 ~~~
 {: .bash}
 
 > ## Exercise 
 > 
-> We saved this file as `data/ref_genome/ecoli_rel606.fasta.gz` and then decompressed it. 
-> What is the real name of the genome? 
+> Suppose we wanted to download fasta files for all chromosomes numbered 1 to 22. Can you suggest a for loop to download all these files? *You do not need to execute the loop as it will take too long to complete*
 > 
 >> ## Solution
 >> 
 >> ~~~
->> $ head data/ref_genome/ecoli_rel606.fasta
+>> $ for i in 1:22
+> do 
+> curl -L -o data/ref_genome/chr${i}.fa.gz
+> https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
+> gunzip data/ref_genome/chr${i}.fa.gz
 >> ~~~
 >> {: .bash}
 >> 
->> The name of the sequence follows the `>` character. The name is `CP000819.1 Escherichia coli B str. REL606, complete genome`.
->> Keep this chromosome name (`CP000819.1`) in mind, as we will use it later in the lesson. 
 > {: .solution}
 {: .challenge}
 
-We will also download a set of trimmed FASTQ files to work with. These are small subsets of our real trimmed data, 
-and will enable us to run our variant calling workflow quite quickly. 
-
-~~~
-$ curl -L -o sub.tar.gz https://ndownloader.figshare.com/files/14418248
-$ tar xvf sub.tar.gz
-$ mv sub/ ~/dc_workshop/data/trimmed_fastq_small
-~~~
-{: .bash}
 
 You will also need to create directories for the results that will be generated as part of this workflow. We can do this in a single
 line of code, because `mkdir` can accept multiple new directory
@@ -84,22 +76,28 @@ $ mkdir -p results/sam results/bam results/bcf results/vcf
 Our first step is to index the reference genome for use by BWA. Indexing allows the aligner to quickly find potential alignment sites for query sequences in a genome, which saves time during alignment. Indexing the reference only has to be run once. The only reason you would want to create a new index is if you are working with a different reference genome or you are using a different tool for alignment.
 
 ~~~
-$ bwa index data/ref_genome/ecoli_rel606.fasta
+$ bwa index data/ref_genome/chr20.fa
 ~~~
 {: .bash}
 
 While the index is created, you will see output that looks something like this:
 
 ~~~
-[bwa_index] Pack FASTA... 0.04 sec
+[bwa_index] Pack FASTA... 0.44 sec
 [bwa_index] Construct BWT for the packed sequence...
-[bwa_index] 1.05 seconds elapse.
-[bwa_index] Update BWT... 0.03 sec
-[bwa_index] Pack forward-only FASTA... 0.02 sec
-[bwa_index] Construct SA from BWT and Occ... 0.57 sec
+[BWTIncCreate] textLength=128888334, availableWord=21068624
+[BWTIncConstructFromPacked] 10 iterations done. 34753182 characters processed.
+[BWTIncConstructFromPacked] 20 iterations done. 64202446 characters processed.
+[BWTIncConstructFromPacked] 30 iterations done. 90372990 characters processed.
+[BWTIncConstructFromPacked] 40 iterations done. 113629422 characters processed.
+[bwt_gen] Finished constructing BWT in 48 iterations.
+[bwa_index] 23.96 seconds elapse.
+[bwa_index] Update BWT... 0.37 sec
+[bwa_index] Pack forward-only FASTA... 0.34 sec
+[bwa_index] Construct SA from BWT and Occ... 12.16 sec
 [main] Version: 0.7.17-r1188
-[main] CMD: bwa index data/ref_genome/ecoli_rel606.fasta
-[main] Real time: 1.765 sec; CPU: 1.715 sec
+[main] CMD: bwa index data/ref_genome/chr20.fa
+[main] Real time: 39.114 sec; CPU: 37.271 sec
 ~~~
 {: .output}
 
@@ -121,11 +119,11 @@ parameters here, your use case might require a change of parameters. *NOTE: Alwa
 and make sure the options you use are appropriate for your data.*
 
 We're going to start by aligning the reads from just one of the 
-samples in our dataset (`SRR2584866`). Later, we'll be 
+samples in our dataset (`NA12873`). Later, we'll be 
 iterating this whole process on all of our sample files.
 
 ~~~
-$ bwa mem data/ref_genome/ecoli_rel606.fasta data/trimmed_fastq_small/SRR2584866_1.trim.sub.fastq data/trimmed_fastq_small/SRR2584866_2.trim.sub.fastq > results/sam/SRR2584866.aligned.sam
+$ bwa mem data/ref_genome/chr20.fa data/trimmed_fastq/NA12873_R1.trim.fq.gz data/trimmed_fastq/NA12873_R2.trim.fq.gz > results/sam/NA12873.aligned.sam
 ~~~
 {: .bash}
 
@@ -133,14 +131,9 @@ You will see output that starts like this:
 
 ~~~
 [M::bwa_idx_load_from_disk] read 0 ALT contigs
-[M::process] read 77446 sequences (10000033 bp)...
-[M::process] read 77296 sequences (10000182 bp)...
-[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (48, 36728, 21, 61)
-[M::mem_pestat] analyzing insert size distribution for orientation FF...
-[M::mem_pestat] (25, 50, 75) percentile: (420, 660, 1774)
-[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 4482)
-[M::mem_pestat] mean and std.dev: (784.68, 700.87)
-[M::mem_pestat] low and high boundaries for proper pairs: (1, 5836)
+[M::process] read 52688 sequences (4947578 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (1, 24564, 0, 0)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
 [M::mem_pestat] analyzing insert size distribution for orientation FR...
 ~~~
 {: .output}
@@ -168,14 +161,9 @@ displayed below with the different fields highlighted.
 We will convert the SAM file to BAM format using the `samtools` program with the `view` command and tell this command that the input is in SAM format (`-S`) and to output BAM format (`-b`): 
 
 ~~~
-$ samtools view -S -b results/sam/SRR2584866.aligned.sam > results/bam/SRR2584866.aligned.bam
+$ samtools view -S -b results/sam/NA12873.aligned.sam > results/bam/NA12873.aligned.bam
 ~~~
 {: .bash}
-
-~~~
-[samopen] SAM header is present: 1 sequences.
-~~~
-{: .output}
 
 
 ### Sort BAM file by coordinates
@@ -183,7 +171,7 @@ $ samtools view -S -b results/sam/SRR2584866.aligned.sam > results/bam/SRR258486
 Next we sort the BAM file using the `sort` command from `samtools`. `-o` tells the command where to write the output.
 
 ~~~
-$ samtools sort -o results/bam/SRR2584866.aligned.sorted.bam results/bam/SRR2584866.aligned.bam 
+$ samtools sort -o results/bam/NA12873.aligned.sorted.bam results/bam/NA12873.aligned.bam 
 ~~~
 {: .bash}
 
@@ -199,26 +187,27 @@ SAM/BAM files can be sorted in multiple ways, e.g. by location of alignment on t
 You can use samtools to learn more about this bam file as well.
 
 ~~~
-samtools flagstat results/bam/SRR2584866.aligned.sorted.bam
+samtools flagstat results/bam/NA12873.aligned.sorted.bam
 ~~~
 {: .bash}
 
 This will give you the following statistics about your sorted bam file:
 
 ~~~
-351169 + 0 in total (QC-passed reads + QC-failed reads)
+52699 + 0 in total (QC-passed reads + QC-failed reads)
 0 + 0 secondary
-1169 + 0 supplementary
+11 + 0 supplementary
 0 + 0 duplicates
-351103 + 0 mapped (99.98% : N/A)
-350000 + 0 paired in sequencing
-175000 + 0 read1
-175000 + 0 read2
-346688 + 0 properly paired (99.05% : N/A)
-349876 + 0 with itself and mate mapped
-58 + 0 singletons (0.02% : N/A)
+52695 + 0 mapped (99.99% : N/A)
+52688 + 0 paired in sequencing
+26344 + 0 read1
+26344 + 0 read2
+52514 + 0 properly paired (99.67% : N/A)
+52680 + 0 with itself and mate mapped
+4 + 0 singletons (0.01% : N/A)
 0 + 0 with mate mapped to a different chr
 0 + 0 with mate mapped to a different chr (mapQ>=5)
+
 ~~~
 {: .output}
 ## Variant calling
@@ -226,8 +215,7 @@ This will give you the following statistics about your sorted bam file:
 A variant call is a conclusion that there is a nucleotide difference vs. some reference at a given position in an individual genome
 or transcriptome, often referred to as a Single Nucleotide Polymorphism (SNP). The call is usually accompanied by an estimate of 
 variant frequency and some measure of confidence. Similar to other steps in this workflow, there are a number of tools available for 
-variant calling. In this workshop we will be using `bcftools`, but there are a few things we need to do before actually calling the 
-variants.
+variant calling. In this workshop we will be using `freebayes`.
 
 ![workflow](../img/variant_calling_workflow.png)
 
