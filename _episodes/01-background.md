@@ -65,17 +65,15 @@ This metadata describes information on the samples sequences as part of the data
 > 
 > Based on the metadata, can you answer the following questions?
 > 
-> 1. How many different individuals exist in the data?
-> 2. How many rows and how many columns are in this data?
-> 3. How many different super populations are there?
-> 4. How many different populations exist with European origin?
+> 1. How many rows and how many columns are in this data?
+> 2. How many different super populations are there?
+> 3. How many different populations exist with European origin?
 >
 >> ## Solution
 >> 
->> 1. 25 different generations
->> 2. 62 rows, 12 columns
->> 3. Nine different sub-populations
->> 4. Five populations within Europe
+>> 1. 3116 rows and 9 columns
+>> 2. Nine different sub-populations
+>> 3. Five populations within Europe
 > {: .solution}
 {: .challenge}
 

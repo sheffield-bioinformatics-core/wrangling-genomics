@@ -42,9 +42,9 @@ built under the assumption that the data will be provided in a specific format.
 
 Often times, the first step in a bioinformatic workflow is getting the data you want to work with onto a computer where you can work with it. If you have outsourced sequencing of your data, the sequencing center will usually provide you with a link that you can use to download your data. Today we will be working with publicly available sequencing data.
 
-We are studying a population of *Escherichia coli* (designated Ara-3), which were propagated for more than 50,000 generations in a glucose-limited minimal medium. We will be working with three samples from this experiment, one from 5,000 generations, one from 15,000 generations, and one from 50,000 generations. The population changed substantially during the course of the experiment, and we will be exploring how with our variant calling workflow. 
+We are studying a subset of *1000 genomes* data that have been reduced in size to help  the workshop run more efficiently.
 
-The data are paired-end, so we will download two files for each sample. We will use the [European Nucleotide Archive](https://www.ebi.ac.uk/ena) to get our data. The ENA "provides a comprehensive record of the world's nucleotide sequencing information, covering raw sequencing data, sequence assembly information and functional annotation." The ENA also provides sequencing data in the fastq format, an important format for sequencing reads that we will be learning about today. 
+
 
 To download the data, run the commands below. 
 
@@ -394,7 +394,7 @@ $ cd ~/dc_workshop/data/untrimmed_fastq/
 FastQC can accept multiple file names as input, and on both zipped and unzipped files, so we can use the \*.fastq* wildcard to run FastQC on all of the FASTQ files in this directory.
 
 ~~~
-$ fastqc *.fq* 
+$ fastqc *.fq.gz* 
 ~~~
 {: .bash}
 
@@ -561,16 +561,14 @@ We've now looked at quite a few "Per base sequence quality" FastQC graphs, but t
 + [**Adapter Content**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/10%20Adapter%20Content.html): a graph indicating where adapater sequences occur in the reads.
 + [**K-mer Content**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/11%20Kmer%20Content.html): a graph showing any sequences which may show a positional bias within the reads.
 
+## Combining reports
+
+For projects involving a large number of samples, it is more convenient to consolidate all QC reports into a single page. This allows any trends and outliers to be identified more easily. A popular tool for doing this is called `multiqc` and can recognise the Quality Control output from a variety of tools including `fastqc`.
+
 
 > ## Exercise
-> 
-> The multiqc tool can be used to combine multiple QC reports onto a single page to make
-> comparisons easier. Consult the help page for the multiqc tool and generate a QC report from 
-> the fastqc files
-> ~~~ 
-> $ multiqc -h
-> ~~~
-
+> Consult the help page for the `multiqc` tool and generate a QC report from the fastqc files you have just generated
+>
 >> ## Solution
 >> 
 >> The multic tool has one compulsory argument, which corresponds to the directory containing QC reports.
