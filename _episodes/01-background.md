@@ -60,7 +60,6 @@ This metadata describes information on the samples sequences as part of the data
 | Data collections            | Which datasets the sample belongs to		|
 
 
-<div class="exercise">
 
 > ## Challenge
 > 
@@ -71,15 +70,14 @@ This metadata describes information on the samples sequences as part of the data
 > 3. How many different super populations are there?
 > 4. How many different populations exist with European origin?
 >
-> > ## Solution
+>> ## Solution
 >> 
-> > 1. 25 different generations
-> > 2. 62 rows, 12 columns
-> > 3. Nine different sub-populations
-> > 4. Five populations within Europe
+>> 1. 25 different generations
+>> 2. 62 rows, 12 columns
+>> 3. Nine different sub-populations
+>> 4. Five populations within Europe
 > {: .solution}
 {: .challenge}
 
-</div>
 
 
