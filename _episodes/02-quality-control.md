@@ -567,17 +567,17 @@ For projects involving a large number of samples, it is more convenient to conso
 
 
 > ## Exercise
-> Consult the help page for the `multiqc` tool and generate a QC report from the fastqc files you have just generated
+> 
+>  Consult the help page for `multiqc` and generate a combined QC report from the fastqc output that you have just generated
 >
 >> ## Solution
->> 
->> The multic tool has one compulsory argument, which corresponds to the directory containing QC reports.
->> 
->> ~~~ 
+>>  The multiqc tool has one compulsory argument which corresponds to the directory containing QC reports. This can be the current working directory; `.`
+>> ~~~
 >> $ multiqc .
 >> ~~~
-
 >> {: .bash}
+>> 
+>> 
 > {: .solution}
 {: .challenge}
 
