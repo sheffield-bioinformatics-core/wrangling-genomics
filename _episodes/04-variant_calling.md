@@ -210,6 +210,7 @@ This will give you the following statistics about your sorted bam file:
 
 ~~~
 {: .output}
+
 ## Variant calling
 
 A variant call is a conclusion that there is a nucleotide difference vs. some reference at a given position in an individual genome
@@ -219,41 +220,29 @@ variant calling. In this workshop we will be using `freebayes`.
 
 ![workflow](../img/variant_calling_workflow.png)
 
-### Step 1: Calculate the read coverage of positions in the genome
+### Calling mutations for a single sample
 
-Do the first pass on variant calling by counting read coverage with 
-[bcftools](https://samtools.github.io/bcftools/bcftools.html). We will 
-use the command `mpileup`. The flag `-O b` tells bcftools to generate a 
-bcf format output file, `-o` specifies where to write the output file, and `-f` flags the path to the reference genome:
+We are going to use freebayes to call SNVs on some 1000 genomes samples. In order to make the SNV-calling run in a reasonable time, we are only considering reads aligned to chromosome 20 in this analysis. 
 
-~~~
-$ bcftools mpileup -O b -o results/bcf/SRR2584866_raw.bcf \
--f data/ref_genome/ecoli_rel606.fasta results/bam/SRR2584866.aligned.sorted.bam 
-~~~
-{: .bash}
+The minimal requirements to run `freebayes` (and why it is appealing for this practical!) are a reference genome and a `.bam` file. The -f parameter is used to specify the location of a reference genome in `.fasta` format.
+
+A minimal command to call mutations on the sample `NA12873` is therefore:-
+
+**Please don't run this command!**
 
 ~~~
-[mpileup] 1 samples in 1 input files
-~~~
-{: .output}
-
-We have now generated a file with coverage information for every base.
-
-### Step 2: Detect the single nucleotide polymorphisms (SNPs)
-
-Identify SNPs using bcftools `call`. We have to specify ploidy with the flag `--ploidy`, which is one for the haploid *E. coli*. `-m` allows for multiallelic and rare-variant calling, `-v` tells the program to output variant sites only (not every site in the genome), and `-o` specifies where to write the output file:
-
-~~~
-$ bcftools call --ploidy 1 -m -v -o results/bcf/SRR2584866_variants.vcf results/bcf/SRR2584866_raw.bcf 
+$ freebayes -f data/ref_genome/chr20.fa results/bam/NA12873.aligned.sorted.bam
 ~~~
 {: .bash}
 
-### Step 3: Filter and report the SNP variants in variant calling format (VCF)
+If you did run that command, you would quickly see that the screen gets filled with lots of text. These are the calls that `freebayes` has making being printed to the screen (the standard output for some unix commands). If you find yourself in this situation, a swift press of CTRL + C should stop the tool from running.
 
-Filter the SNPs for the final output in VCF format, using `vcfutils.pl`:
+What we need to do is direct the output to a file. We can call the output file anything we like, but it is advisable to make the name relatable to the name of the input. If we are in the situation of calling genotypes on many samples, with many different callers, then we want to be able to identify the processing used on each sample.
+
+Although it is not mandatory, we give the output file the extension `.vcf`. The `.vcf` format is a commonly-adopted standard for variant calls, which we will look into detail next.
 
 ~~~
-$ vcfutils.pl varFilter results/bcf/SRR2584866_variants.vcf  > results/vcf/SRR2584866_final_variants.vcf
+$ freebayes -f data/ref_genome/chr20.fa results/bam/NA12873.aligned.sorted.bam > results/vcf/NA12873.chr20.vcf
 ~~~
 {: .bash}
 
@@ -261,7 +250,7 @@ $ vcfutils.pl varFilter results/bcf/SRR2584866_variants.vcf  > results/vcf/SRR25
 ## Explore the VCF format:
 
 ~~~
-$ less -S results/vcf/SRR2584866_final_variants.vcf
+$ less -S results/vcf/NA12873.chr20.vcf
 ~~~
 {: .bash}
 
@@ -271,52 +260,33 @@ some additional information:
 
 ~~~
 ##fileformat=VCFv4.2
-##FILTER=<ID=PASS,Description="All filters passed">
-##bcftoolsVersion=1.8+htslib-1.8
-##bcftoolsCommand=mpileup -O b -o results/bcf/SRR2584866_raw.bcf -f data/ref_genome/ecoli_rel606.fasta results/bam/SRR2584866.aligned.sorted.bam
-##reference=file://data/ref_genome/ecoli_rel606.fasta
-##contig=<ID=CP000819.1,length=4629812>
-##ALT=<ID=*,Description="Represents allele(s) other than observed.">
-##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
-##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of reads supporting an indel">
-##INFO=<ID=IMF,Number=1,Type=Float,Description="Maximum fraction of reads supporting an indel">
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
-##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias for filtering splice-site artefacts in RNA-seq data (bigger is better)",Version=
-##INFO=<ID=RPB,Number=1,Type=Float,Description="Mann-Whitney U test of Read Position Bias (bigger is better)">
-##INFO=<ID=MQB,Number=1,Type=Float,Description="Mann-Whitney U test of Mapping Quality Bias (bigger is better)">
-##INFO=<ID=BQB,Number=1,Type=Float,Description="Mann-Whitney U test of Base Quality Bias (bigger is better)">
-##INFO=<ID=MQSB,Number=1,Type=Float,Description="Mann-Whitney U test of Mapping Quality vs Strand Bias (bigger is better)">
-##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">
-##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">
-##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
-##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-##INFO=<ID=ICB,Number=1,Type=Float,Description="Inbreeding Coefficient Binomial test (bigger is better)">
-##INFO=<ID=HOB,Number=1,Type=Float,Description="Bias in the number of HOMs number (smaller is better)">
-##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes for each ALT allele, in the same order as listed">
+##fileDate=20210628
+##source=freeBayes v1.0.0
+##reference=data/ref_genome/chr20.fa
+##contig=<ID=chr20,length=64444167>
+##phasing=none
+##commandline="freebayes -f data/ref_genome/chr20.fa results/bam/NA12873.aligned.sorted.bam"
+##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of samples with data">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total read depth at the locus">
+##INFO=<ID=DPB,Number=1,Type=Float,Description="Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype">
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Total number of alternate alleles in called genotypes">
 ##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
-##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
-##INFO=<ID=MQ,Number=1,Type=Integer,Description="Average mapping quality">
-##bcftools_callVersion=1.8+htslib-1.8
-##bcftools_callCommand=call --ploidy 1 -m -v -o results/bcf/SRR2584866_variants.vcf results/bcf/SRR2584866_raw.bcf; Date=Tue Oct  9 18:48:10 2018
+##INFO=<ID=AF,Number=A,Type=Float,Description="Estimated allele frequency in the range (0,1]">
+##INFO=<ID=RO,Number=1,Type=Integer,Description="Count of full observations of the reference haplotype.">
+##INFO=<ID=AO,Number=A,Type=Integer,Description="Count of full observations of this alternate haplotype.">
+
 ~~~
 {: .output}
 
 Followed by information on each of the variations observed: 
 
 ~~~
-#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  results/bam/SRR2584866.aligned.sorted.bam
-CP000819.1      1521    .       C       T       207     .       DP=9;VDB=0.993024;SGB=-0.662043;MQSB=0.974597;MQ0F=0;AC=1;AN=1;DP4=0,0,4,5;MQ=60
-CP000819.1      1612    .       A       G       225     .       DP=13;VDB=0.52194;SGB=-0.676189;MQSB=0.950952;MQ0F=0;AC=1;AN=1;DP4=0,0,6,5;MQ=60
-CP000819.1      9092    .       A       G       225     .       DP=14;VDB=0.717543;SGB=-0.670168;MQSB=0.916482;MQ0F=0;AC=1;AN=1;DP4=0,0,7,3;MQ=60
-CP000819.1      9972    .       T       G       214     .       DP=10;VDB=0.022095;SGB=-0.670168;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,2,8;MQ=60      GT:PL
-CP000819.1      10563   .       G       A       225     .       DP=11;VDB=0.958658;SGB=-0.670168;MQSB=0.952347;MQ0F=0;AC=1;AN=1;DP4=0,0,5,5;MQ=60
-CP000819.1      22257   .       C       T       127     .       DP=5;VDB=0.0765947;SGB=-0.590765;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,2,3;MQ=60      GT:PL
-CP000819.1      38971   .       A       G       225     .       DP=14;VDB=0.872139;SGB=-0.680642;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,4,8;MQ=60      GT:PL
-CP000819.1      42306   .       A       G       225     .       DP=15;VDB=0.969686;SGB=-0.686358;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,5,9;MQ=60      GT:PL
-CP000819.1      45277   .       A       G       225     .       DP=15;VDB=0.470998;SGB=-0.680642;MQSB=0.95494;MQ0F=0;AC=1;AN=1;DP4=0,0,7,5;MQ=60
-CP000819.1      56613   .       C       G       183     .       DP=12;VDB=0.879703;SGB=-0.676189;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,8,3;MQ=60      GT:PL
-CP000819.1      62118   .       A       G       225     .       DP=19;VDB=0.414981;SGB=-0.691153;MQSB=0.906029;MQ0F=0;AC=1;AN=1;DP4=0,0,8,10;MQ=59
-CP000819.1      64042   .       G       A       225     .       DP=18;VDB=0.451328;SGB=-0.689466;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,7,9;MQ=60      GT:PL
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  unknown
+chr20   147079  .       A       C       61.0529 .       AB=0;ABP=0;AC=2;AF=1;AN=2;AO=2;CIGAR=1X;DP=2;DPB=2;DPRA=0;EPP=7.35324;EPPR=0;GTI=0;LEN=1;MEANALT=1;MQM=60;MQMR=0;NS=1;NUMALT=1;ODDS=7.37776;PAIRED=1;PAIREDR=0;PAO=0;PQA=0;PQR=0;PRO=0;QA=77;QR=0;RO=0;RPL=1;RPP=3.0103;RPPR=0;RPR=1;RUN=1;SAF=1;SAP=3.0103;SAR=1;SRF=0;SRP=0;SRR=0;TYPE=snp GT:DP:AD:RO:QR:AO:QA:GL 1/1:2:0,2:0:0:2:77:-7.30914,-0.60206,0
+chr20   777276  .       AA      ACA     42.7249 .       AB=0;ABP=0;AC=2;AF=1;AN=2;AO=2;CIGAR=1M1I1M;DP=2;DPB=3;DPRA=0;EPP=7.35324;EPPR=0;GTI=0;LEN=1;MEANALT=1;MQM=60;MQMR=0;NS=1;NUMALT=1;ODDS=7.37776;PAIRED=1;PAIREDR=0;PAO=0;PQA=0;PQR=0;PRO=0;QA=64;QR=0;RO=0;RPL=0;RPP=7.35324;RPPR=0;RPR=2;RUN=1;SAF=2;SAP=7.35324;SAR=0;SRF=0;SRP=0;SRR=0;TYPE=ins   GT:DP:AD:RO:QR:AO:QA:GL 1/1:2:0,2:0:0:2:64:-6.07837,-0.60206,0
+chr20   777343  .       A       G       42.7277 .       AB=0;ABP=0;AC=2;AF=1;AN=2;AO=2;CIGAR=1X;DP=2;DPB=2;DPRA=0;EPP=7.35324;EPPR=0;GTI=0;LEN=1;MEANALT=1;MQM=60;MQMR=0;NS=1;NUMALT=1;ODDS=7.37776;PAIRED=1;PAIREDR=0;PAO=0;PQA=0;PQR=0;PRO=0;QA=64;QR=0;RO=0;RPL=2;RPP=7.35324;RPPR=0;RPR=0;RUN=1;SAF=2;SAP=7.35324;SAR=0;SRF=0;SRP=0;SRR=0;TYPE=snp       GT:DP:AD:RO:QR:AO:QA:GL 1/1:2:0,2:0:0:2:64:-6.07866,-0.60206,0
+chr20   938451  .       A       G       57.2623 .       AB=0;ABP=0;AC=2;AF=1;AN=2;AO=2;CIGAR=1X;DP=2;DPB=2;DPRA=0;EPP=7.35324;EPPR=0;GTI=0;LEN=1;MEANALT=1;MQM=60;MQMR=0;NS=1;NUMALT=1;ODDS=7.37776;PAIRED=1;PAIREDR=0;PAO=0;PQA=0;PQR=0;PRO=0;QA=73;QR=0;RO=0;RPL=1;RPP=3.0103;RPPR=0;RPR=1;RUN=1;SAF=1;SAP=3.0103;SAR=1;SRF=0;SRP=0;SRR=0;TYPE=snp GT:DP:AD:RO:QR:AO:QA:GL 1/1:2:0,2:0:0:2:73:-6.93007,-0.60206,0
+chr20   1708473 .       C       T       23.7579 .       AB=0;ABP=0;AC=2;AF=1;AN=2;AO=2;CIGAR=1X;DP=2;DPB=2;DPRA=0;EPP=7.35324;EPPR=0;GTI=0;LEN=1;MEANALT=1;MQM=60;MQMR=0;NS=1;NUMALT=1;ODDS=5.46562;PAIRED=1;PAIREDR=0;PAO=0;PQA=0;PQR=0;PRO=0;QA=44;QR=0;RO=0;RPL=0;RPP=7.35324;RPPR=0;RPR=2;RUN=1;SAF=0;SAP=7.35324;SAR=2;SRF=0;SRP=0;SRR=0;TYPE=snp       GT:DP:AD:RO:QR:AO:QA:GL 1/1:2:0,2:0:0:2:44:-4.17987,-0.60206,0
 ~~~
 {: .output}
 
@@ -363,16 +333,16 @@ to learn more about the VCF file format.
 >> ## Solution
 >> 
 >> ~~~
->> $ grep -v "#" results/vcf/SRR2584866_final_variants.vcf | wc -l
+>> $ grep -v "#" results/vcf/NA12873.chr20.vcf | wc -l
 >> ~~~
 >> {: .bash}
 >> 
 >> ~~~ 
->> 766
+>> 218
 >> ~~~
 >> {: .output}
 >>
->> There are 766 variants in this file.
+>> There are 218 variants in this file.
 > {: .solution}
 {: .challenge}
 
