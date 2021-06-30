@@ -355,82 +355,13 @@ will describe two different tools for visualization: a light-weight command-line
 Institute's Integrative Genomics Viewer (IGV) which requires
 software installation and transfer of files.
 
-In order for us to visualize the alignment files, we will need to index the BAM file using `samtools`:
+In order for us to visualize the alignment files, we will need to *index* the BAM file using `samtools`:
 
 ~~~
-$ samtools index results/bam/SRR2584866.aligned.sorted.bam
-~~~
-{: .bash}
-
-### Viewing with `tview`
-
-[Samtools](http://www.htslib.org/) implements a very simple text alignment viewer based on the GNU
-`ncurses` library, called `tview`. This alignment viewer works with short indels and shows [MAQ](http://maq.sourceforge.net/) consensus. 
-It uses different colors to display mapping quality or base quality, subjected to users' choice. Samtools viewer is known to work with a 130 GB alignment swiftly. Due to its text interface, displaying alignments over network is also very fast.
-
-In order to visualize our mapped reads, we use `tview`, giving it the sorted bam file and the reference file: 
-
-~~~
-$ samtools tview results/bam/SRR2584866.aligned.sorted.bam data/ref_genome/ecoli_rel606.fasta
+$ samtools index results/bam/NA12873.aligned.sorted.bam
 ~~~
 {: .bash}
 
-~~~
-1         11        21        31        41        51        61        71        81        91        101       111       121
-AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGCTTCTGAACTGGTTACCTGCCGTGAGTAAATTAAAATTTTATTGACTTAGGTCACTAAATAC
-..................................................................................................................................
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, ..................N................. ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,........................
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, ..................N................. ,,,,,,,,,,,,,,,,,,,,,,,,,,,.............................
-...................................,g,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ....................................   ................
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,....................................   ....................................      ,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ....................................  ,,a,,,,,,,,,,,,,,,,,,,,,,,,,,,,,     .......
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, .............................  ,,,,,,,,,,,,,,,,,g,,,,,    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ...........................T.......   ,,,,,,,,,,,,,,,,,,,,,,,c,          ......
-......................... ................................   ,g,,,,,,,,,,,,,,,,,,,      ...........................
-,,,,,,,,,,,,,,,,,,,,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,       ..........................
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   ................................T..  ..............................   ,,,,,,
-...........................       ,,,,,,g,,,,,,,,,,,,,,,,,   ....................................         ,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,, ....................................  ...................................        ....
-....................................  ........................  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,      ....
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-........................            .................................. .............................     ....
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   ....................................        ..........................
-...............................       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, ....................................
-...................................  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ..................................
-.................................... ,,,,,,,,,,,,,,,,,,a,,,,,,,,,,,,,,,,,        ,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  ............................ ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-~~~
-{: .output}
-
-The first line of output shows the genome coordinates in our reference genome. The second line shows the reference
-genome sequence. The third line shows the consensus sequence determined from the sequence reads. A `.` indicates
-a match to the reference sequence, so we can see that the consensus from our sample matches the reference in most
-locations. That is good! If that wasn't the case, we should probably reconsider our choice of reference.
-
-Below the horizontal line, we can see all of the reads in our sample aligned with the reference genome. Only 
-positions where the called base differs from the reference are shown. You can use the arrow keys on your keyboard
-to scroll or type `?` for a help menu. To navigate to a specific position, type `g`. A dialogue box will appear. In
-this box, type the name of the "chromosome" followed by a colon and the position of the variant you would like to view
-(e.g. for this sample, type `CP000819.1:50` to view the 50th base. Type `Ctrl^C` or `q` to exit `tview`. 
-
-> ## Exercise 
-> 
-> Visualize the alignment of the reads for our `SRR2584866` sample. What variant is present at 
-> position 4377265? What is the canonical nucleotide in that position? 
-> 
->> ## Solution
->> 
->> ~~~
->> $ samtools tview ~/dc_workshop/results/bam/SRR2584866.aligned.sorted.bam ~/dc_workshop/data/ref_genome/ecoli_rel606.fasta
->> ~~~
->> {: .bash}
->> 
->> Then type `g`. In the dialogue box, type `CP000819.1:4377265`. 
->> `G` is the variant. `A` is canonical. This variant possibly changes the phenotype of this sample to hypermutable. It occurs
->> in the gene *mutL*, which controls DNA mismatch repair.
-> {: .solution}
-{: .challenge}
 
 ### Viewing with IGV
 
@@ -438,7 +369,7 @@ this box, type the name of the "chromosome" followed by a colon and the position
 
 In order to use IGV, we will need to transfer some files to our local machine. We know how to do this with `scp`. 
 Open a new tab in your terminal window and create a new folder. We'll put this folder on our Desktop for 
-demonstration purposes, but in general you should avoide proliferating folders and files on your Desktop and 
+demonstration purposes, but in general you should avoid proliferating folders and files on your Desktop and 
 instead organize files within a directory structure like we've been using in our `dc_workshop` directory.
 
 ~~~
@@ -452,10 +383,9 @@ with your AWS instance number. The commands to `scp` always go in the terminal w
 local computer (not your AWS instance).
 
 ~~~
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/bam/SRR2584866.aligned.sorted.bam ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/bam/SRR2584866.aligned.sorted.bam.bai ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/data/ref_genome/ecoli_rel606.fasta ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/vcf/SRR2584866_final_variants.vcf ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshopresults/bam/NA12873.aligned.sorted.bam.bai ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/vcf/NA12873.chr20.vcf ~/Desktop/files_for_igv
 ~~~
 {: .bash}
 
@@ -465,15 +395,14 @@ Next, we need to open the IGV software. If you haven't done so already, you can 
 to unzip it, and then drag the program into your Applications folder. 
 
 1. Open IGV.
-2. Load our reference genome file (`ecoli_rel606.fasta`) into IGV using the **"Load Genomes from File..."** option under the **"Genomes"** pull-down menu.
-3. Load our BAM file (`SRR2584866.aligned.sorted.bam`) using the **"Load from File..."** option under the **"File"** pull-down menu. 
-4.  Do the same with our VCF file (`SRR2584866_final_variants.vcf`).
+2. Load our BAM file (`NA12873.aligned.sorted.bam`) using the **"Load from File..."** option under the **"File"** pull-down menu. 
+3.  Do the same with our VCF file (`NA12873.chr20.vcf`).
 
 Your IGV browser should look like the screenshot below:
 
 ![IGV](../img/igv-screenshot.png)
 
-There should be two tracks: one coresponding to our BAM file and the other for our VCF file. 
+There should be two tracks: one corresponding to our BAM file and the other for our VCF file. 
 
 In the **VCF track**, each bar across the top of the plot shows the allele fraction for a single locus. The second bar shows
 the genotypes for each locus in each *sample*. We only have one sample called here, so we only see a single line. Dark blue = 
