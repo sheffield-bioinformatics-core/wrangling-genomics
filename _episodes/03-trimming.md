@@ -251,10 +251,10 @@ gzip NA12873_R1.fq
 ~~~
 $ for infile in *_R1.fq.gz
 > do
->   base=$(basename ${infile} _R1.fq.gz) \
->   trimmomatic PE ${infile} ${base}_2.fq.gz \
->                ${base}_1.trim.fq.gz ${base}_1un.trim.fq.gz \
->                ${base}_2.trim.fq.gz ${base}_2un.trim.fq.gz \
+>   base=$(basename ${infile} _R1.fq.gz) 
+>   trimmomatic PE ${infile} ${base}_R2.fq.gz \
+>                ${base}_R1.trim.fq.gz ${base}_R1un.trim.fq.gz \
+>                ${base}_R2.trim.fq.gz ${base}_R2un.trim.fq.gz \
 >                SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
 > done
 ~~~
@@ -287,26 +287,6 @@ NA12873_R2_fastqc.html   NA12874_2untrim.fq.gz           NA12878_R1_fastqc.html
 ~~~
 {: .output}
 
-> ## Exercise
-> We trimmed our fastq files with Nextera adapters, 
-> but there are other adapters that are commonly used.
-> What other adapter files came with Trimmomatic?
->
->
->> ## Solution
->> ~~~
->> $ ls ~/miniconda3/pkgs/trimmomatic-0.38-0/share/trimmomatic-0.38-0/adapters/
->> ~~~
->> {: .bash}
->>
->> ~~~
->> NexteraPE-PE.fa  TruSeq2-SE.fa    TruSeq3-PE.fa
->> TruSeq2-PE.fa    TruSeq3-PE-2.fa  TruSeq3-SE.fa
->> ~~~
->> {: .output}
->>
-> {: .solution}
-{: .challenge}
 
 We've now completed the trimming and filtering steps of our quality
 control process! Before we move on, let's move our trimmed FASTQ files

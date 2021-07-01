@@ -340,6 +340,11 @@ You will see an automatically updating output message telling you the
 progress of the analysis. It will start like this: 
 
 ~~~
+Started analysis of NA12873_R1.fq.gz
+Approx 5% complete for NA12873_R1.fq.gz
+Approx 10% complete for NA12873_R1.fq.gz
+Approx 15% complete for NA12873_R1.fq.gz
+Approx 20% complete for NA12873_R1.fq.gz
 
 ~~~
 {: .output}
