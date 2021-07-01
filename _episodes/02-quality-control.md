@@ -50,31 +50,31 @@ To download the data, run the commands below.
 
 Here we are using the `-p` option for `mkdir`. This option allows `mkdir` to create the new directory, even if one of the parent directories doesn't already exist. It also supresses errors if the directory already exists, without overwriting that directory. 
 
-It will take about 15 minutes to download the files.
+
 ~~~
 mkdir -p ~/dc_workshop/data/untrimmed_fastq/
 cd ~/dc_workshop/data/untrimmed_fastq
 
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/004/SRR2589044/SRR2589044_1.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/004/SRR2589044/SRR2589044_2.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/003/SRR2584863/SRR2584863_1.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/003/SRR2584863/SRR2584863_2.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2584866/SRR2584866_1.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2584866/SRR2584866_2.fastq.gz 
+scp /mnt/shared/1000_genomes_subset/NA12873_R1.fq.gz .
+scp /mnt/shared/1000_genomes_subset/NA12873_R2.fq.gz .
+scp /mnt/shared/1000_genomes_subset/NA12874_R1.fq.gz .
+scp /mnt/shared/1000_genomes_subset/NA12874_R2.fq.gz .
+scp /mnt/shared/1000_genomes_subset/NA12878_R1.fq.gz .
+scp /mnt/shared/1000_genomes_subset/NA12878_R2.fq.gz .
+
 ~~~
 {: .bash}
 
 > ## Faster option
 > 
-> If your workshop is short on time or the venue's internet connection is weak or unstable, learners can 
-> avoid needing to download the data and instead use the data files provided in the `.backup/` directory.
+> If that seems like a lot of typing, so you can use "wild-cards" as we have seen previously to copy everything in one go
 > 
 > ~~~
-> $ cp ~/.backup/untrimmed_fastq/*fastq.gz .
+> $ scp /mnt/shared/1000_genomes_subset/*.fq.gz .
 > ~~~
 > {: .bash}
 > 
-> This command creates a copy of each of the files in the `.backup/untrimmed_fastq/` directory that end in `fastq.gz` and
+> This command creates a copy of each of the files in the `/mnt/shared/1000_genomes_subset` directory that end in `fq.gz` and
 > places the copies in the current working directory (signified by `.`). 
 {: .callout}
 
@@ -193,129 +193,68 @@ very poor (`#` = a quality score of 2).
 
 At this point, lets validate that all the relevant tools are installed. If you are using the AWS AMI then these _should_ be preinstalled. 
 
+
 ~~~
-$ fastqc -h
-            FastQC - A high throughput sequence QC analysis tool
+$ module avail
+~~~
+{: .bash}
 
-SYNOPSIS
+~~~
 
-        fastqc seqfile1 seqfile2 .. seqfileN
+---------------------------------------------------------------- /mnt/shared/modules/all ----------------------------------------------------------------
+   Autoconf/2.69-GCCcore-10.2.0                  Perl/5.32.0-GCCcore-10.2.0                    gompi/2020b
+   Automake/1.16.2-GCCcore-10.2.0                Pillow/8.0.1-GCCcore-10.2.0                   gperf/3.1-GCCcore-10.2.0
+   Autotools/20200321-GCCcore-10.2.0             PyYAML/5.3.1-GCCcore-10.2.0                   groff/1.22.4-GCCcore-10.2.0
+   BCFtools/1.12-GCC-10.2.0                      Python/2.7.18-GCCcore-10.2.0                  help2man/1.47.4
+   BWA/0.7.17-GCC-10.2.0                         Python/3.8.6-GCCcore-10.2.0            (D)    help2man/1.47.16-GCCcore-10.2.0    (D)
+   Bison/3.5.3                                   SAMtools/1.12-GCC-10.2.0                      hwloc/2.2.0-GCCcore-10.2.0
+   Bison/3.7.1-GCCcore-10.2.0                    SQLite/3.33.0-GCCcore-10.2.0                  hypothesis/5.41.2-GCCcore-10.2.0
+   Bison/3.7.1                         (D)       ScaLAPACK/2.1.0-gompi-2020b                   intltool/0.51.0-GCCcore-10.2.0
+   CMake/3.18.4-GCCcore-10.2.0                   SciPy-bundle/2020.11-foss-2020b               libarchive/3.4.3-GCCcore-10.2.0
+   DB/18.1.40-GCCcore-10.2.0                     Tcl/8.6.10-GCCcore-10.2.0                     libevent/2.1.12-GCCcore-10.2.0
+   Eigen/3.3.8-GCCcore-10.2.0                    Tk/8.6.10-GCCcore-10.2.0                      libfabric/1.11.0-GCCcore-10.2.0
+   FFTW/3.3.8-gompi-2020b                        Tkinter/3.8.6-GCCcore-10.2.0                  libffi/3.3-GCCcore-10.2.0
+   FastQC/0.11.9-Java-11               (L)       Trimmomatic/0.39-Java-11                      libjpeg-turbo/2.0.5-GCCcore-10.2.0
+   GCC/10.2.0                                    UCX/1.9.0-GCCcore-10.2.0                      libpciaccess/0.16-GCCcore-10.2.0
+   GCCcore/10.2.0                                UnZip/6.0-GCCcore-10.2.0                      libpng/1.6.37-GCCcore-10.2.0
+   GMP/6.2.0-GCCcore-10.2.0                      VCFtools/0.1.16-GCC-10.2.0                    libreadline/8.0-GCCcore-10.2.0
+   GSL/2.6-GCC-10.2.0                            X11/20201008-GCCcore-10.2.0                   libtool/2.4.6-GCCcore-10.2.0
+   HTSlib/1.11-GCC-10.2.0                        XZ/5.2.5-GCCcore-10.2.0                       libxml2/2.9.10-GCCcore-10.2.0
+   HTSlib/1.12-GCC-10.2.0              (D)       binutils/2.35-GCCcore-10.2.0                  libyaml/0.2.5-GCCcore-10.2.0
+   IGV/2.9.4-Java-11                             binutils/2.35                          (D)    makeinfo/6.7-GCCcore-10.2.0
+   Java/11.0.2                         (L,11)    bzip2/1.0.8-GCCcore-10.2.0                    matplotlib/3.3.3-foss-2020b
+   LibTIFF/4.1.0-GCCcore-10.2.0                  cURL/7.72.0-GCCcore-10.2.0                    ncurses/6.2-GCCcore-10.2.0
+   M4/1.4.18-GCCcore-10.2.0                      expat/2.2.9-GCCcore-10.2.0                    ncurses/6.2                        (D)
+   M4/1.4.18                           (D)       flex/2.6.4-GCCcore-10.2.0                     networkx/2.5-foss-2020b
+   Meson/0.55.3-GCCcore-10.2.0                   flex/2.6.4                             (D)    numactl/2.0.13-GCCcore-10.2.0
+   MultiQC/1.9-foss-2020b-Python-3.8.6           fontconfig/2.13.92-GCCcore-10.2.0             pkg-config/0.29.2-GCCcore-10.2.0
+   NASM/2.15.05-GCCcore-10.2.0                   foss/2020b                                    pybind11/2.6.0-GCCcore-10.2.0
+   Ninja/1.10.1-GCCcore-10.2.0                   freebayes/1.3.5-GCC-10.2.0-Java-11.0.2        util-linux/2.36-GCCcore-10.2.0
+   OpenBLAS/0.3.12-GCC-10.2.0                    freetype/2.10.3-GCCcore-10.2.0                xorg-macros/1.19.2-GCCcore-10.2.0
+   OpenMPI/4.0.5-GCC-10.2.0                      gettext/0.21-GCCcore-10.2.0                   zlib/1.2.11-GCCcore-10.2.0
+   PMIx/3.1.5-GCCcore-10.2.0                     gettext/0.21                           (D)    zlib/1.2.11                        (D)
 
-    fastqc [-o output dir] [--(no)extract] [-f fastq|bam|sam]
-           [-c contaminant file] seqfile1 .. seqfileN
+~~~
+{: .output}
 
-DESCRIPTION
+The module relevant for QC purposes is called `FastQC`.
 
-    FastQC reads a set of sequence files and produces from each one a quality
-    control report consisting of a number of different modules, each one of
-    which will help to identify a different potential type of problem in your
-    data.
-
-    If no files to process are specified on the command line then the program
-    will start as an interactive graphical application.  If files are provided
-    on the command line then the program will run with no user interaction
-    required.  In this mode it is suitable for inclusion into a standardised
-    analysis pipeline.
-
-    The options for the program as as follows:
-
-    -h --help       Print this help file and exit
-
-    -v --version    Print the version of the program and exit
-
-    -o --outdir     Create all output files in the specified output directory.                                                                                    
-                    Please note that this directory must exist as the program
-                    will not create it.  If this option is not set then the
-                    output file for each sequence file is created in the same
-                    directory as the sequence file which was processed.
-
-    --casava        Files come from raw casava output. Files in the same sample
-                    group (differing only by the group number) will be analysed
-                    as a set rather than individually. Sequences with the filter
-                    flag set in the header will be excluded from the analysis.
-                    Files must have the same names given to them by casava
-                    (including being gzipped and ending with .gz) otherwise they
-                    won't be grouped together correctly.
-
-    --nano          Files come from naopore sequences and are in fast5 format. In
-                    this mode you can pass in directories to process and the program
-                    will take in all fast5 files within those directories and produce
-                    a single output file from the sequences found in all files.
-
-    --nofilter      If running with --casava then don't remove read flagged by
-                    casava as poor quality when performing the QC analysis.
-
-    --extract       If set then the zipped output file will be uncompressed in
-                    the same directory after it has been created.  By default
-                    this option will be set if fastqc is run in non-interactive
-                    mode.
-
-    -j --java       Provides the full path to the java binary you want to use to
-                    launch fastqc. If not supplied then java is assumed to be in
-                    your path.
-
-    --noextract     Do not uncompress the output file after creating it.  You
-                    should set this option if you do not wish to uncompress
-                    the output when running in non-interactive mode.
-
-    --nogroup       Disable grouping of bases for reads >50bp. All reports will
-                    show data for every base in the read.  WARNING: Using this
-                    option will cause fastqc to crash and burn if you use it on
-                    really long reads, and your plots may end up a ridiculous size.
-                    You have been warned!
-
-    -f --format     Bypasses the normal sequence file format detection and
-                    forces the program to use the specified format.  Valid
-                    formats are bam,sam,bam_mapped,sam_mapped and fastq
-
-    -t --threads    Specifies the number of files which can be processed
-                    simultaneously.  Each thread will be allocated 250MB of
-                    memory so you shouldn't run more threads than your
-                    available memory will cope with, and not more than
-                    6 threads on a 32 bit machine
-
-    -c              Specifies a non-default file which contains the list of
-    --contaminants  contaminants to screen overrepresented sequences against.
-                    The file must contain sets of named contaminants in the
-                    form name[tab]sequence.  Lines prefixed with a hash will
-                    be ignored.
-
-    -a              Specifies a non-default file which contains the list of
-    --adapters      adapter sequences which will be explicity searched against
-                    the library. The file must contain sets of named adapters
-                    in the form name[tab]sequence.  Lines prefixed with a hash
-                    will be ignored.
-	
-    -l              Specifies a non-default file which contains a set of criteria
-    --limits        which will be used to determine the warn/error limits for the
-                    various modules.  This file can also be used to selectively
-                    remove some modules from the output all together.  The format
-                    needs to mirror the default limits.txt file found in the
-                    Configuration folder.
-
-   -k --kmers       Specifies the length of Kmer to look for in the Kmer content
-                    module. Specified Kmer length must be between 2 and 10. Default
-                    length is 7 if not specified.
-
-   -q --quiet       Supress all progress messages on stdout and only report errors.
-
-   -d --dir         Selects a directory to be used for temporary files written when
-                    generating report images. Defaults to system temp directory if
-                    not specified.
-
-BUGS
-
-    Any bugs in fastqc should be reported either to simon.andrews@babraham.ac.uk
-    or in www.bioinformatics.babraham.ac.uk/bugzilla/
+~~~
+module load FastQC
 ~~~
 {: .bash}
 
 if fastqc is not installed then you would expect to see an error like
 
 ~~~
-$ fastqc -h 
-The program 'fastqc' is currently not installed. You can install it by typing:
-sudo apt-get install fastqc
+Lmod has detected the following error:  The following module(s) are unknown: "FastQC"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore-cache load "fastqc"
+
+Also make sure that all modulefiles written in TCL start with the string #%Module
+
 ~~~
 
 If this happens check with your instructor before trying to install it. 
@@ -376,25 +315,25 @@ $ cd ~/dc_workshop/data/untrimmed_fastq/
 >> {: .bash}
 >> 
 >> ~~~
->> total 4.3G
->> -rwxrwxrwx 1 root root 6.5M Jun 11 13:57 NA12873_R1.fq
->> -rwxrwxrwx 1 root root 2.9M Jun 11 13:57 NA12873_R2.fq.gz
->> -rwxrwxrwx 1 root root 2.7M Jun 11 13:54 NA12874_R1.fq.gz
->> -rwxrwxrwx 1 root root 2.7M Jun 11 13:54 NA12874_R2.fq.gz
->> -rwxrwxrwx 1 root root 2.1M Jun 11 13:49 NA12878_R1.fq.gz
->> -rwxrwxrwx 1 root root 2.2M Jun 11 13:49 NA12878_R2.fq.gz
+>> -rw-r--r--. 1 markd users 6.5M Jul  1 10:03 NA12873_R1.fq
+>> -rw-r--r--. 1 markd users 2.9M Jul  1 10:03 NA12873_R2.fq.gz
+>> -rw-r--r--. 1 markd users 2.7M Jul  1 10:03 NA12874_R1.fq.gz
+>> -rw-r--r--. 1 markd users 2.7M Jul  1 10:03 NA12874_R2.fq.gz
+>> -rw-r--r--. 1 markd users 2.1M Jul  1 10:03 NA12878_R1.fq.gz
+>> -rw-r--r--. 1 markd users 2.2M Jul  1 10:03 NA12878_R2.fq.gz
+
 >> ~~~
 >> {: .output}
 >> 
->> There are six FASTQ files ranging from 2.2M  to 6.5M. 
+>> There are six FASTQ files ranging from 2.1M  to 6.5M. 
 >> 
 > {: .solution}
 {: .challenge}
 
-FastQC can accept multiple file names as input, and on both zipped and unzipped files, so we can use the \*.fastq* wildcard to run FastQC on all of the FASTQ files in this directory.
+FastQC can accept multiple file names as input, and on both zipped and unzipped files, so we can use the \*.fq* wildcard to run FastQC on all of the FASTQ files in this directory.
 
 ~~~
-$ fastqc *.fq.gz* 
+$ fastqc *.fq* 
 ~~~
 {: .bash}
 
@@ -443,8 +382,7 @@ NA12874_R1.fq.gz        NA12878_R1_fastqc.html
 
 For each input FASTQ file, FastQC has created a `.zip` file and a
 `.html` file. The `.zip` file extension indicates that this is 
-actually a compressed set of multiple output files. We'll be working
-with these output files soon. The `.html` file is a stable webpage
+actually a compressed set of multiple output files. The `.html` file is a stable webpage
 displaying the summary report for each of our samples.
 
 We want to keep our data files and our results files separate, so we
@@ -568,7 +506,7 @@ For projects involving a large number of samples, it is more convenient to conso
 
 > ## Exercise
 > 
->  Consult the help page for `multiqc` and generate a combined QC report from the fastqc output that you have just generated
+>  Find and load the module that provides the `multiqc` tool. Consult the help page for `multiqc` and generate a combined QC report from the fastqc output that you have just generated
 >
 >> ## Solution
 >>  The multiqc tool has one compulsory argument which corresponds to the directory containing QC reports. This can be the current working directory; `.`
