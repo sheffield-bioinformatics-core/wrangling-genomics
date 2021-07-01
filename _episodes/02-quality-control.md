@@ -321,7 +321,6 @@ $ cd ~/dc_workshop/data/untrimmed_fastq/
 >> -rw-r--r--. 1 markd users 2.7M Jul  1 10:03 NA12874_R2.fq.gz
 >> -rw-r--r--. 1 markd users 2.1M Jul  1 10:03 NA12878_R1.fq.gz
 >> -rw-r--r--. 1 markd users 2.2M Jul  1 10:03 NA12878_R2.fq.gz
-
 >> ~~~
 >> {: .output}
 >> 
@@ -437,14 +436,13 @@ $ mkdir -p ~/Desktop/fastqc_html
 Now we can transfer our HTML files to our local computer using `scp`.
 
 ~~~
-$ scp dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
+$ scp <your_username>@54.216.156.214:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
 ~~~
 {: .bash}
 
 As a reminder, the first part
-of the command `dcuser@ec2-34-238-162-94.compute-1.amazonaws.com` is
-the address for your remote computer. Make sure you replace everything
-after `dcuser@` with your instance number (the one you used to log in). 
+of the command `<your_username>@54.216.156.214` is
+the address for your remote computer. Make sure you replace `<your_username>` with your username for this workshop (the one you used to log in). 
 
 The second part starts with a `:` and then gives the absolute path
 of the files you want to transfer from your remote computer. Don't
