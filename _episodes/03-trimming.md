@@ -29,7 +29,28 @@ filter poor quality reads and trim poor quality bases from our samples.
 
 ## Trimmomatic Options
 
-Trimmomatic has a variety of options to trim your reads. If we run the following command, we can see some of our options.
+Trimmomatic has a variety of options to trim your reads. It has been installed as a module that we will need to `load`
+
+~~~
+$ module load Trimmomatic
+~~~
+{: .bash}
+
+Upon loading it suggests the following command to run, which seema like quite a lot of typing and prone to mistakes
+
+~~~
+To execute Trimmomatic run: java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar
+~~~
+{: .output}
+
+Fortunately, the `alias` command allows us to create shortcuts so we don't have to type everything in.
+~~~
+$ alias trimmomatic='java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar'
+
+~~~
+{: .bash}
+
+If we run the following command, we can see some of our options.
 
 ~~~
 $ trimmomatic
@@ -129,7 +150,7 @@ While using FastQC we saw that Nextera adapters were present in our samples.
 The adapter sequences came with the installation of trimmomatic, so we will first copy these sequences into our current directory.
 
 ~~~
-$ cp ~/.miniconda3/pkgs/trimmomatic-0.38-0/share/trimmomatic-0.38-0/adapters/NexteraPE-PE.fa .
+$ cp /mnt/shared/software/Trimmomatic/0.39-Java-11/adapters/NexteraPE-PE.fa .
 ~~~
 {: .bash}
 
@@ -150,7 +171,7 @@ $ trimmomatic PE -phred33 NA12873_R1.fq NA12873_R2.fq.gz \
 ~~~
 TrimmomaticPE: Started with arguments:
  -phred33 NA12873_R1.fq NA12873_R2.fq NA12873_R1.trim.fq.gz NA12873_R1un.trim.fq.gz NA12873_R2.trim.fq.gz NA12873_R2un.trim.fq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
-Multiple cores found: Using 4 threads
+Multiple cores found: Using 2 threads
 Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
 Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
 Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
@@ -199,16 +220,17 @@ $ ls NA12873_R* -l -h
 {: .bash}
 
 ~~~
--rwxrwxrwx 1 root root 6.5M Jun 11 13:57 NA12873_R1.fq
--rw-r--r-- 1 root root 2.4M Jun 14 14:28 NA12873_R1.trim.fq.gz
--rw-r--r-- 1 root root 585K Jun 14 11:05 NA12873_R1_fastqc.html
--rw-r--r-- 1 root root 329K Jun 14 11:05 NA12873_R1_fastqc.zip
--rw-r--r-- 1 root root  21K Jun 14 14:28 NA12873_R1un.trim.fq.gz
--rwxrwxrwx 1 root root 6.5M Jun 11 13:57 NA12873_R2.fq.gz
--rw-r--r-- 1 root root 2.4M Jun 14 14:28 NA12873_R2.trim.fq.gz
--rw-r--r-- 1 root root 660K Jun 14 11:05 NA12873_R2_fastqc.html
--rw-r--r-- 1 root root 354K Jun 14 11:05 NA12873_R2_fastqc.zip
--rw-r--r-- 1 root root 221K Jun 14 14:28 NA12873_R2un.trim.fq.gz
+-rw-r--r--. 1 markd users 578K Jul  1 10:32 NA12873_R1_fastqc.html
+-rw-r--r--. 1 markd users 324K Jul  1 10:32 NA12873_R1_fastqc.zip
+-rw-r--r--. 1 markd users 6.5M Jul  1 10:03 NA12873_R1.fq
+-rw-r--r--. 1 markd users 2.4M Jul  1 12:34 NA12873_R1.trim.fq.gz
+-rw-r--r--. 1 markd users  21K Jul  1 12:34 NA12873_R1un.trim.fq.gz
+-rw-r--r--. 1 markd users 572K Jul  1 10:32 NA12873_R2_fastqc.html
+-rw-r--r--. 1 markd users 311K Jul  1 10:32 NA12873_R2_fastqc.zip
+-rw-r--r--. 1 markd users 2.9M Jul  1 10:03 NA12873_R2.fq.gz
+-rw-r--r--. 1 markd users 2.4M Jul  1 12:34 NA12873_R2.trim.fq.gz
+-rw-r--r--. 1 markd users 221K Jul  1 12:34 NA12873_R2un.trim.fq.gz
+
 ~~~
 {: .output}
 
@@ -229,7 +251,7 @@ gzip NA12873_R1.fq
 ~~~
 $ for infile in *_R1.fq.gz
 > do
->   base=$(basename ${infile} _R1.fq.gz)
+>   base=$(basename ${infile} _R1.fq.gz) \
 >   trimmomatic PE ${infile} ${base}_2.fq.gz \
 >                ${base}_1.trim.fq.gz ${base}_1un.trim.fq.gz \
 >                ${base}_2.trim.fq.gz ${base}_2un.trim.fq.gz \
