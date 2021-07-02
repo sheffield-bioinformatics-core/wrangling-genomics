@@ -1,4 +1,4 @@
-#set -e
+set -e
 cd ~/dc_workshop/results
 
 genome=~/dc_workshop/data/ref_genome/chr20.fa
@@ -9,7 +9,7 @@ module load SAMtools
 
 bwa index $genome
 
-mkdir -p sam bam bcf vcf
+mkdir -p sam bam vcf
 
 for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     do
@@ -23,7 +23,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     sam=~/dc_workshop/results/sam/${base}.aligned.sam
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
-    variants=~/dc_workshop/results/bcf/${base}_chr20.vcf
+    variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
 
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam

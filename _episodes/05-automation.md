@@ -161,7 +161,7 @@ cd ~/dc_workshop/data/untrimmed_fastq/
 
 echo "Running FastQC ..."
 module load FastQC
-fastqc *.fastq*
+fastqc *.fq*
 
 mkdir -p ~/dc_workshop/results/fastqc_untrimmed_reads
 
@@ -186,12 +186,13 @@ $ bash read_qc.sh
 
 ~~~
 Running FastQC ...
-Started analysis of SRR2584866.fastq
-Approx 5% complete for SRR2584866.fastq
-Approx 10% complete for SRR2584866.fastq
-Approx 15% complete for SRR2584866.fastq
-Approx 20% complete for SRR2584866.fastq
-Approx 25% complete for SRR2584866.fastq
+Started analysis of NA12873_R1.fq.gz
+Approx 5% complete for NA12873_R1.fq.gz
+Approx 10% complete for NA12873_R1.fq.gz
+Approx 15% complete for NA12873_R1.fq.gz
+Approx 20% complete for NA12873_R1.fq.gz
+Approx 25% complete for NA12873_R1.fq.gz
+
 . 
 . 
 . 
@@ -200,22 +201,19 @@ Approx 25% complete for SRR2584866.fastq
 
 For each of your sample files, FastQC will ask if you want to replace the existing version with a new version. This is 
 because we have already run FastQC on this samples files and generated all of the outputs. We are now doing this again using
-our scripts. Go ahead and select `A` each time this message appears. It will appear once per sample file (six times total).
+our scripts. 
 
-~~~
-replace SRR2584866_fastqc/Icons/fastqc_icon.png? [y]es, [n]o, [A]ll, [N]one, [r]ename:
-~~~
-{: .output}
 
 
 # Automating the Rest of our Variant Calling Workflow
 
 We can extend these principles to the entire variant calling workflow. To do this, we will take all of the individual commands that we wrote before, put them into a single file, add variables so that the script knows to iterate through our input files and write to the appropriate output files. This is very similar to what we did with our `read_qc.sh` script, but will be a bit more complex.
 
-Download the script from [here](https://raw.githubusercontent.com/datacarpentry/wrangling-genomics/gh-pages/files/run_variant_calling.sh). Download to `~/dc_workshop/scripts`.
+Download the script from [here](https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/run_variant_calling.sh). Download to `~/dc_workshop/scripts`.
 
 ~~~
-curl -O https://raw.githubusercontent.com/datacarpentry/wrangling-genomics/gh-pages/files/run_variant_calling.sh
+curl -O https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/run_variant_calling.sh
+
 ~~~
 {: .bash}
 
@@ -242,37 +240,41 @@ The script should look like this:
 set -e
 cd ~/dc_workshop/results
 
-genome=~/dc_workshop/data/ref_genome/ecoli_rel606.fasta
+genome=~/dc_workshop/data/ref_genome/chr20.fa
+## Load the required modules
+module load BWA
+module load freebayes
+module load SAMtools
 
 bwa index $genome
 
-mkdir -p sam bam bcf vcf
+mkdir -p sam bam vcf
 
-for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
+for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     do
     echo "working with file $fq1"
 
-    base=$(basename $fq1 _1.trim.sub.fastq)
+    base=$(basename $fq1 _R1.trim.fq.gz)
     echo "base name is $base"
 
-    fq1=~/dc_workshop/data/trimmed_fastq_small/${base}_1.trim.sub.fastq
-    fq2=~/dc_workshop/data/trimmed_fastq_small/${base}_2.trim.sub.fastq
+    fq1=~/dc_workshop/data/trimmed_fastq/${base}_R1.trim.fq.gz
+    fq2=~/dc_workshop/data/trimmed_fastq/${base}_R2.trim.fq.gz
     sam=~/dc_workshop/results/sam/${base}.aligned.sam
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
-    raw_bcf=~/dc_workshop/results/bcf/${base}_raw.bcf
-    variants=~/dc_workshop/results/bcf/${base}_variants.vcf
-    final_variants=~/dc_workshop/results/vcf/${base}_final_variants.vcf 
+    variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
 
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
-    samtools sort -o $sorted_bam $bam
+    samtools sort -o $sorted_bam $bam 
     samtools index $sorted_bam
-    bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam
-    bcftools call --ploidy 1 -m -v -o $variants $raw_bcf 
-    vcfutils.pl varFilter $variants > $final_variants
-   
+    
+    echo "Running freebayes..."
+    
+    freebayes -f $genome $sorted_bam > $variants
+
     done
+
 ~~~
 {: .output}
 
@@ -290,9 +292,20 @@ Next we tell our script where to find the reference genome by assigning the `gen
 the path to our reference genome: 
 
 ~~~
-genome=~/dc_workshop/data/ref_genome/ecoli_rel606.fasta
+genome=~/dc_workshop/data/ref_genome/chr20.fa
 ~~~
 {: .output}
+
+We load the software modules that we will need
+
+~~~
+module load BWA
+module load freebayes
+module load SAMtools
+
+~~~
+{: .output}
+
 
 Next we index our reference genome for BWA: 
 
@@ -304,20 +317,20 @@ bwa index $genome
 And create the directory structure to store our results in: 
 
 ~~~
-mkdir -p sam bam bcf vcf
+mkdir -p sam bam vcf
 ~~~
 {: .output}
 
 Then, we use a loop to run the variant calling workflow on each of our FASTQ files. The full list of commands
 within the loop will be executed once for each of the FASTQ files in the 
-`data/trimmed_fastq_small/` directory. 
+`data/trimmed_fastq/` directory. 
 We will include a few `echo` statements to give us status updates on our progress.
 
 The first thing we do is assign the name of the FASTQ file we're currently working with to a variable called `fq1` and
 tell the script to `echo` the filename back to us so we can check which file we're on.
 
 ~~~
-for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
+for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     do
     echo "working with file $fq1"
 ~~~
@@ -326,7 +339,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq_small/*_1.trim.sub.fastq
 We then extract the base name of the file (excluding the path and `.fastq` extension) and assign it
 to a new variable called `base`. 
 ~~~
-    base=$(basename $fq1 _1.trim.sub.fastq)
+    base=$(basename $fq1 _R1.trim.fq.gz)
     echo "base name is $base"
 ~~~
 {: .bash}
@@ -335,17 +348,18 @@ We can use the `base` variable to access both the `base_1.fastq` and `base_2.fas
 
 
 ~~~
-    #input fastq files
-    fq1=~/dc_workshop/data/trimmed_fastq_small/${base}_1.trim.sub.fastq
-    fq2=~/dc_workshop/data/trimmed_fastq_small/${base}_2.trim.sub.fastq
-    
-    # output files
+    fq1=~/dc_workshop/data/trimmed_fastq/${base}_R1.trim.fq.gz
+    fq2=~/dc_workshop/data/trimmed_fastq/${base}_R2.trim.fq.gz
     sam=~/dc_workshop/results/sam/${base}.aligned.sam
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
-    raw_bcf=~/dc_workshop/results/bcf/${base}_raw.bcf
-    variants=~/dc_workshop/results/bcf/${base}_variants.vcf
-    final_variants=~/dc_workshop/results/vcf/${base}_final_variants.vcf     
+    variants=~/dc_workshop/results/bcf/${base}_chr20.vcf
+
+    bwa mem $genome $fq1 $fq2 > $sam
+    samtools view -S -b $sam > $bam
+    samtools sort -o $sorted_bam $bam 
+    samtools index $sorted_bam
+    freebayes -f $genome $sorted_bam > $variants   
 ~~~
 {: .bash}
 
@@ -380,26 +394,14 @@ And finally, the actual workflow steps:
 ~~~
 {: .output}
 
-5) calculate the read coverage of positions in the genome:
+
+5) call SNPs with freebayes:
 
 ~~~
-    bcftools mpileup -O b -o $raw_bcf -f $genome $sorted_bam 
+    freebayes -f $genome $sorted_bam > $variants
 ~~~
 {: .output}
 
-6) call SNPs with bcftools:
-
-~~~
-    bcftools call --ploidy 1 -m -v -o $variants $raw_bcf 
-~~~
-{: .output}
-
-7) filter and report the SNP variants in variant calling format (VCF):
-
-~~~
-    vcfutils.pl varFilter $variants  > $final_variants
-~~~
-{: .output}
 
 
 
@@ -417,41 +419,8 @@ $ bash run_variant_calling.sh
 ~~~
 {: .bash}
 
+# Submitting our script to the cluster
 
-> ## Exercise
->
-> The samples we just performed variant calling on are part of the long-term evolution experiment introduced at the 
-> beginning of our variant calling workflow. From the metadata table, we know that SRR2589044 was from generation 5000,
-> SRR2584863 was from generation 15000, and SRR2584866 was from generation 50000. How did the number of mutations per sample change
-> over time? Examine the metadata table. What is one reason the number of mutations may have changed the way they did?
-> 
-> Hint: You can find a copy of the output files for the subsampled trimmed FASTQ file variant calling in the 
-> `~/.solutions/wrangling-solutions/variant_calling_auto/` directory.
-> 
->> ## Solution
->> 
->> ~~~
->> $ for infile in ~/dc_workshop/results/vcf/*_final_variants.vcf
->> > do
->> >     echo ${infile}
->> >     grep -v "#" ${infile} | wc -l
->> > done
->> ~~~
->> {: .bash}
->> 
->> For SRR2589044 from generation 5000 there were 10 mutations, for SRR2584863 from generation 15000 there were 25 mutations, 
->> and SRR2584866 from generation 766 mutations. In the last generation, a hypermutable phenotype had evolved, causing this
->> strain to have more mutations. 
-> {: .solution}
-{: .challenge}
-
-
-> ## Bonus Exercise
-> 
-> If you have time after completing the previous exercise, use `run_variant_calling.sh` to run the variant calling pipeline 
-> on the full-sized trimmed FASTQ files. You should have a copy of these already in `~/dc_workshop/data/trimmed_fastq`, but if 
-> you don't, there is a copy in `~/.solutions/wrangling-solutions/trimmed_fastq`. Does the number of variants change per sample?
-{: .challenge} 
 
 
 
