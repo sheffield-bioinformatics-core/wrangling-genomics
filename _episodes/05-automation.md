@@ -21,9 +21,10 @@ FASTQ files and put them into a new file.
 Here's the script you wrote:
 
 ~~~
-grep -B1 -A2 NNNNNNNNNN *.fastq > scripted_bad_reads.txt
+FILE=dmel-all-r6.19.gtf
 
-echo "Script finished!"
+# call wc -l on our file
+wc -l $FILE
 ~~~
 {: .bash}
 
@@ -40,25 +41,15 @@ see why we want to automate this.
 We've also used `for` loops in previous lessons to iterate one or two commands over multiple input files. 
 In these `for` loops, the filename was defined as a variable in the `for` statement, which enabled you to run the loop on multiple files. We will be using variable assignments like this in our new shell scripts.
 
-Here's the `for` loop you wrote for unzipping `.zip` files: 
+Here's the one you wrote for running Trimmomatic on all of our `.fastq` sample files:
 
 ~~~
-$ for filename in *.zip
+$ for infile in *_R1.fq.gz
 > do
-> unzip $filename
-> done
-~~~
-{: .bash}
-
-And here's the one you wrote for running Trimmomatic on all of our `.fastq` sample files:
-
-~~~
-$ for infile in *_1.fastq.gz
-> do
->   base=$(basename ${infile} _1.fastq.gz)
->   trimmomatic PE ${infile} ${base}_2.fastq.gz \
->                ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz \
->                ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz \
+>   base=$(basename ${infile} _R1.fq.gz) 
+>   trimmomatic PE  -phred33 ${infile} ${base}_R2.fq.gz \
+>                ${base}_R1.trim.fq.gz ${base}_R1un.trim.fq.gz \
+>                ${base}_R2.trim.fq.gz ${base}_R2un.trim.fq.gz \
 >                SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
 > done
 ~~~
@@ -73,7 +64,7 @@ Notice that in this `for` loop, we used two variables, `infile`, which was defin
 > definition of your variable by typing into your script: echo $variable_name.
 {: .callout}
 
-In this lesson, we'll use two shell scripts to automate the variant calling analysis: one for FastQC analysis (including creating our summary file), and a second for the remaining variant calling. To write a script to run our FastQC analysis, we'll take each of the commands we entered to run FastQC and process the output files and put them into a single file with a `.sh` extension. The `.sh` is not essential, but serves as a reminder to ourselves and to the computer that this is a shell script.
+In this lesson, we'll use two shell scripts to automate the variant calling analysis: one for FastQC analysis (including creating the `multiqc` summary), and a second for the remaining variant calling. To write a script to run our FastQC analysis, we'll take each of the commands we entered to run FastQC and process the output files and put them into a single file with a `.sh` extension. The `.sh` is not essential, but serves as a reminder to ourselves and to the computer that this is a shell script.
 
 # Analyzing Quality with FastQC
 
@@ -117,7 +108,8 @@ on all of the files in our current directory with a `.fastq` extension.
 
 ~~~
 echo "Running FastQC ..."
-fastqc *.fastq*
+module load FastQC
+fastqc *.fq*
 ~~~
 {: .output}
 
@@ -145,26 +137,14 @@ cd ~/dc_workshop/results/fastqc_untrimmed_reads/
 ~~~
 {: .output}
 
-The next five lines should look very familiar. First we give ourselves a status message to tell us that we're unzipping our ZIP
-files. Then we run our for loop to unzip all of the `.zip` files in this directory.
-
+Next we concatenate all of our summary files into a single output file, with a status message to remind ourselves that this is what we're doing.
 ~~~
-echo "Unzipping..."
-for filename in *.zip
-    do
-    unzip $filename
-    done
+echo "Loading multiqc and combining the QC"
+module load MultiQC
+multiqc .
 ~~~
 {: .output}
 
-Next we concatenate all of our summary files into a single output file, with a status message to remind ourselves that this is 
-what we're doing.
-
-~~~
-echo "Saving summary..."
-cat */summary.txt > ~/dc_workshop/docs/fastqc_summaries.txt
-~~~
-{: .output}
 
 > ## Using `echo` statements
 > 
@@ -180,6 +160,7 @@ set -e
 cd ~/dc_workshop/data/untrimmed_fastq/
 
 echo "Running FastQC ..."
+module load FastQC
 fastqc *.fastq*
 
 mkdir -p ~/dc_workshop/results/fastqc_untrimmed_reads
@@ -190,14 +171,9 @@ mv *.html ~/dc_workshop/results/fastqc_untrimmed_reads/
 
 cd ~/dc_workshop/results/fastqc_untrimmed_reads/
 
-echo "Unzipping..."
-for filename in *.zip
-    do
-    unzip $filename
-    done
-
-echo "Saving summary..."
-cat */summary.txt > ~/dc_workshop/docs/fastqc_summaries.txt
+echo "Loading multiqc and combining the QC"
+module load MultiQC
+multiqc .
 ~~~
 {: .output}
 

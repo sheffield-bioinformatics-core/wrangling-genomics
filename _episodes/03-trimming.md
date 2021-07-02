@@ -252,7 +252,7 @@ gzip NA12873_R1.fq
 $ for infile in *_R1.fq.gz
 > do
 >   base=$(basename ${infile} _R1.fq.gz) 
->   trimmomatic PE ${infile} ${base}_R2.fq.gz \
+>   trimmomatic PE  -phred33 ${infile} ${base}_R2.fq.gz \
 >                ${base}_R1.trim.fq.gz ${base}_R1un.trim.fq.gz \
 >                ${base}_R2.trim.fq.gz ${base}_R2un.trim.fq.gz \
 >                SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
@@ -302,8 +302,9 @@ $ ls
 {: .bash}
 
 ~~~
-SRR2584863_1.trim.fastq.gz    SRR2584866_1.trim.fastq.gz    SRR2589044_1.trim.fastq.gz
-SRR2584863_2.trim.fastq.gz    SRR2584866_2.trim.fastq.gz    SRR2589044_2.trim.fastq.gz
+NA12873_R1.trim.fq.gz    NA12873_R2.trim.fq.gz    NA12874_R1.trim.fq.gz    NA12874_R2.trim.fq.gz    NA12878_R1.trim.fq.gz    NA12878_R2.trim.fq.gz
+NA12873_R1un.trim.fq.gz  NA12873_R2un.trim.fq.gz  NA12874_R1un.trim.fq.gz  NA12874_R2un.trim.fq.gz  NA12878_R1un.trim.fq.gz  NA12878_R2un.trim.fq.gz
+
 ~~~
 {: .output}
 

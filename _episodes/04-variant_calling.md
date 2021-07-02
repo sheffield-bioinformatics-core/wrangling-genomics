@@ -76,6 +76,7 @@ $ mkdir -p results/sam results/bam results/bcf results/vcf
 Our first step is to index the reference genome for use by BWA. Indexing allows the aligner to quickly find potential alignment sites for query sequences in a genome, which saves time during alignment. Indexing the reference only has to be run once. The only reason you would want to create a new index is if you are working with a different reference genome or you are using a different tool for alignment.
 
 ~~~
+$ module load BWA
 $ bwa index data/ref_genome/chr20.fa
 ~~~
 {: .bash}
@@ -161,6 +162,7 @@ displayed below with the different fields highlighted.
 We will convert the SAM file to BAM format using the `samtools` program with the `view` command and tell this command that the input is in SAM format (`-S`) and to output BAM format (`-b`): 
 
 ~~~
+$ module load SAMtools
 $ samtools view -S -b results/sam/NA12873.aligned.sam > results/bam/NA12873.aligned.bam
 ~~~
 {: .bash}
@@ -255,7 +257,7 @@ $ less -S results/vcf/NA12873.chr20.vcf
 {: .bash}
 
 You will see the header (which describes the format), the time and date the file was
-created, the version of bcftools that was used, the command line parameters used, and 
+created, the version of `freebayes` that was used, the command line parameters used, and 
 some additional information:
 
 ~~~
@@ -383,13 +385,12 @@ with your AWS instance number. The commands to `scp` always go in the terminal w
 local computer (not your AWS instance).
 
 ~~~
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshopresults/bam/NA12873.aligned.sorted.bam.bai ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/vcf/NA12873.chr20.vcf ~/Desktop/files_for_igv
+$ scp <your_username>@54.216.156.214:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam ~/Desktop/files_for_igv
+$ scp <your_username>@54.216.156.214:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam.bai ~/Desktop/files_for_igv
+$ scp <your_username>@54.216.156.214:~/dc_workshop/results/vcf/NA12873.chr20.vcf ~/Desktop/files_for_igv
 ~~~
 {: .bash}
 
-You will need to type the password for your AWS instance each time you call `scp`. 
 
 Next, we need to open the IGV software. If you haven't done so already, you can download IGV from the [Broad Institute's software page](https://www.broadinstitute.org/software/igv/download), double-click the `.zip` file
 to unzip it, and then drag the program into your Applications folder. 
