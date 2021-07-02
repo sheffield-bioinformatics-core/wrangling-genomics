@@ -2,6 +2,10 @@
 cd ~/dc_workshop/results
 
 genome=~/dc_workshop/data/ref_genome/chr20.fa
+## Load the required modules
+module load BWA
+module load freebayes
+module load SAMtools
 
 bwa index $genome
 
