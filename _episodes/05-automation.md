@@ -225,6 +225,7 @@ Our variant calling workflow has the following steps:
 4. Calculate the read coverage of positions in the genome.
 5. Detect the single nucleotide polymorphisms (SNPs).
 6. Filter and report the SNP variants in VCF (variant calling format).
+7. Annotate the variants
 
 Let's go through this script together:
 
@@ -245,10 +246,12 @@ genome=~/dc_workshop/data/ref_genome/chr20.fa
 module load BWA
 module load freebayes
 module load SAMtools
+module load VCFtools
+module load annovar
 
 bwa index $genome
 
-mkdir -p sam bam vcf
+mkdir -p sam bam vcf vcf_annotated
 
 for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     do
@@ -263,6 +266,9 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
     variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
+    variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered.vcf 
+    
+    annovar_input==~/dc_workshop/results/vcf_annotated/${base}_avinput 
 
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
@@ -272,6 +278,10 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     echo "Running freebayes..."
     
     freebayes -f $genome $sorted_bam > $variants
+
+    vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
+    convert2annovar.pl -format vcf4 $variants_filtered > $annovar_input
+    table_annovar.pl $annovar_input humandb/ -buildver hg38 -out $base_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
 
     done
 
@@ -302,7 +312,8 @@ We load the software modules that we will need
 module load BWA
 module load freebayes
 module load SAMtools
-
+module load VCFtool
+module load annovar
 ~~~
 {: .output}
 
@@ -317,7 +328,7 @@ bwa index $genome
 And create the directory structure to store our results in: 
 
 ~~~
-mkdir -p sam bam vcf
+mkdir -p sam bam vcf vcf_annotated
 ~~~
 {: .output}
 
@@ -354,12 +365,10 @@ We can use the `base` variable to access both the `base_1.fastq` and `base_2.fas
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
     variants=~/dc_workshop/results/bcf/${base}_chr20.vcf
+    variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered.vcf 
+    annovar_input==~/dc_workshop/results/vcf_annotated/${base}_avinput 
 
-    bwa mem $genome $fq1 $fq2 > $sam
-    samtools view -S -b $sam > $bam
-    samtools sort -o $sorted_bam $bam 
-    samtools index $sorted_bam
-    freebayes -f $genome $sorted_bam > $variants   
+
 ~~~
 {: .bash}
 
@@ -395,14 +404,23 @@ And finally, the actual workflow steps:
 {: .output}
 
 
-5) call SNPs with freebayes:
+5) call SNPs with freebayes and filter:
 
 ~~~
     freebayes -f $genome $sorted_bam > $variants
+    vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
 ~~~
 {: .output}
 
+6) annotate with annovar
 
+~~~
+vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
+convert2annovar.pl -format vcf4 $variants_filtered > $annovar_input
+table_annovar.pl $annovar_input humandb/ -buildver hg38 -out $base_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
+
+~~~
+{: .output}
 
 
 > ## Exercise

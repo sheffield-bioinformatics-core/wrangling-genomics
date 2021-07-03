@@ -14,7 +14,7 @@ keypoints:
 - "There are many different file formats for storing genomics data. It's important to understand what type of information is contained in each file, and how it was derived."
 ---
 
-We mentioned before that we are working with files from a long-term evolution study of an *E. coli* population (designated Ara-3). Now that we have looked at our data to make sure that it is high quality, and removed low-quality base calls, we can perform variant calling to see how the population changed over time. We care how this population changed relative to the original population, *E. coli* strain REL606. Therefore, we will align each of our samples to the *E. coli* REL606 reference genome, and see what differences exist in our reads versus the genome.
+We mentioned before that we are working with files from the 1000 genomes project. Now that we have looked at our data to make sure that it is high quality, and removed low-quality base calls, we can perform variant calling to see how the population changed over time. We care what mutations these individuals have relative to a *healthy* individual.Therefore, we will align each of our samples to chromosome 20 of the human reference genome, and see what differences exist in our reads versus the genome.
 
 # Alignment to a reference genome
 
@@ -33,7 +33,7 @@ The alignment process consists of two steps:
 
 # Setting up
 
-First we download the reference genome for *E. coli* REL606. Although we could copy or move the file with `cp` or `mv`, most genomics workflows begin with a download step, so we will practice that here. 
+First we download the reference genome for Human chromosome 20. Although we could copy or move the file with `cp` or `mv`, most genomics workflows begin with a download step, so we will practice that here. 
 
 ~~~
 $ cd ~/dc_workshop
@@ -45,7 +45,7 @@ $ gunzip data/ref_genome/chr20.fa.gz
 
 > ## Exercise 
 > 
-> Suppose we wanted to download fasta files for all chromosomes numbered 1 to 22. Can you suggest a for loop to download all these files? *You do not need to execute the loop as it will take too long to complete*
+> Suppose we wanted to download fasta files for all chromosomes numbered 1 to 22. Can you suggest a for loop to download all these files? How would you then joing the files together into a single file? *You do not need to execute the loop as it will take too long to complete*
 > 
 >> ## Solution
 >> 
@@ -55,12 +55,20 @@ $ gunzip data/ref_genome/chr20.fa.gz
 > curl -L -o data/ref_genome/chr${i}.fa.gz
 > https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
 > gunzip data/ref_genome/chr${i}.fa.gz
+> done
+> cat chr${i}.fa > hg38.fa
 >> ~~~
 >> {: .bash}
 >> 
 > {: .solution}
 {: .challenge}
 
+
+> ## Downloading genome reference files
+> For convenience, we have downloaded our reference file from the UCSC resource as it provides reference files on a per-chromosome basis. In pratice, you will probably want to download an entire genome for your variant calling. Moreover, you might have a reference organism other than human.
+> Reference genomes for a variety of organisms can be found on [Ensembl](https://www.ensembl.org/Homo_sapiens/Info/Index).
+
+{: .callout}
 
 You will also need to create directories for the results that will be generated as part of this workflow. We can do this in a single
 line of code, because `mkdir` can accept multiple new directory
@@ -412,6 +420,107 @@ heterozygous, Cyan = homozygous variant, Grey = reference.  Filtered entries are
 Zoom in to inspect variants you see in your filtered VCF file to become more familiar with IGV. See how quality information 
 corresponds to alignment information at those loci.
 Use [this website](http://software.broadinstitute.org/software/igv/AlignmentData) and the links therein to understand how IGV colors the alignments.
+
+## Filter the variants
+
+By default, `freebayes` reports all possible variants and the calls it makes may be of varying quality. Even though we have previously trimmed unreliable bases from our dataset we may still identify positions that look like they are mutations, but are in fact artefects. `freebayes` assigns a *quality* score to each call that it makes and these can be used to filter the results. The quality scores are not particularly easy to interpret or assign a cut-off to; except that a lower quality means a mutation with less evidence to support it.
+
+The [`vcftools`](https://vcftools.github.io/index.html) suite of software allows various filtering operations to be performed. For this workshop we will remove all variants below an acceptable threshold, but in practice other filters should be applied such as requiring a minimum *depth* of sequencing. We cannot apply such a filter her due to the restricted nature of our dataset.
+
+~~~
+module load VCFtools
+vcftools --vcf results/vcf/NA12873.chr20.vcf -minQ 20 --recode --recode-INFO-all --out results/vcf/NA12873.chr20_final.vcf
+~~~
+{:bash}
+
+Depending on our application, we might also want to discard variants that are common in healthy individuals. Researchers often want to prioritise mutations that are likely to have biological consequences. We can only these types of question once we have annotated our calls against databases of previously identified mutations.
+
+## Variant Annotation
+
+### Why do we need to *annoate* our variants?
+
+- Can have huge list of variants after SNV-calling
+  + in the order of *millions* even after filtering
+- Not all will have consequences for the individual
+- Need to functionally annotate biological and biochemical function
+- Determine which variants have been previously-identified
+in previous studies
+  + amongst healthy / diseased individuals
+
+There are many annotation resources available, but we have chosen to demonstrate `annovar`. There is an overhead associated with downloading the required annotation files, and a lot of disk space is consumed. However, you will hopefully agree that once configured it is relatively easy to use. `annovar` is a suite of `perl` scripts that can perform a variety of annotation and filtering tasks. It can also collate the results from annotating against different databases into one convenient table.
+
+Let's create a directory for our annotated results
+
+~~~
+mkdir -p ~/dc_workshop/results/vcf_annotated
+~~~
+{:bash}
+
+`annovar` requires input files to be in a specific format, which we do not currently have. Fortunately, it provides a script that can convert from vcf to its own format; `convert2annovar.pl`. We will use this script to put an annovar-compatible file in the `vcf_annotated` directory
+
+~~~
+cd ~/dc_workshop/results/vcf_annotated
+module load annovar
+convert2annovar.pl -format vcf4 ../vcf/NA12873.chr20_final.vcf > NA12873.avinput
+~~~
+{: .bash}
+
+
+The main annovar script is called `annotate_variation.pl` and the operations it can be performed are summarised by running the script without any options. Some example commands are given at the bottom of the text that is displayed.
+
+~~~
+annotate_variation.pl
+~~~
+{: .bash}
+
+`annovar` can compare the variant positions in our data to a whole host of [pre-built databases](https://annovar.openbioinformatics.org/en/latest/user-guide/filter/#summary-of-databases). None are supplied with the software itself and they have to be downloaded by the user.
+
+We can downloaded some files for this workshop to save time. For reference, the commands that were used are given below (you would need to un-comment the code in order to re-run).
+
+~~~
+##annotate_variation.pl -downdb -buildver hg38 refGene humandb
+##annotate_variation.pl --buildver hg38 --downdb seq humandb/hg38_seq
+##retrieve_seq_from_fasta.pl humandb/hg38_refGene.txt -seqdir humandb/hg38_seq -format refGene -outfile humandb/hg38_refGeneMrna.fa
+
+~~~
+{: .bash}
+
+
+A fundamental question is whether our variants occur within genomic regions that are translated into *genes* or not. Variants in these regions are more likely to have consequences as, for example, they can lead to alternative amino acids being produced. We might also want to known whether any variants occur within genes that are known to be implicated with disease. To annotate against known gene positions we can use the `-geneanno` operation. This will use a database that has been downloaded. For this workshop we downloaded such files to `/mnt/shared/annovar_db/humandb/`.
+
+~~~
+annotate_variation.pl -geneanno -buildver hg38 NA12873.avinput /mnt/shared/annovar_db/humandb
+~~~
+{: .bash}
+
+> ## Exercise 
+> 
+> What files did the previous command create? Use the documentation from annovar to find out more about them https://annovar.openbioinformatics.org/en/latest/user-guide/gene/. What other databases can we annotate against?
+> 
+>> ## Solution
+>>  
+>> ~~~
+> ls -lrt
+> ls /mnt/shared/annovar_db/humandb
+> 
+>> ~~~
+>> {: .bash}
+>> exonic and variant function files are created. Any variants that occur within coding (exon) regions are in the exonic files. All other variants appear in the variant function and categorised according to their closest gene.
+> {: .solution}
+{: .challenge}
+
+
+The `annotate_variation.pl` script can be applied in this manner to other databases that we have downloaded which will quickly result in a large number of files in the directory.
+
+The `table_annovar.pl` script can annotate against multiple sources and compile the results into a convenient table for further investigation. The below command will annotate against 1000 genomes, COSMIC and various databases that can assign clinical significance. A `.csv` file is created that can be copied locally and opened in Excel.
+
+~~~
+table_annovar.pl NA12873.avinput /mnt/shared/annovar_db/humandb -buildver hg38 -out NA12873_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
+
+~~~
+{: .bash}
+
+## Next steps
 
 Now that we've run through our workflow for a single sample, we want to repeat this workflow for our other five
 samples. However, we don't want to type each of these individual steps again five more times. That would be very
