@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-#SBATCH -J variant_calling
-#SBATCH -p testing
+#SBATCH -J variant_calling_batch
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --mem=3G
+#SBATCH --mem=6G
 
 
 set -e
