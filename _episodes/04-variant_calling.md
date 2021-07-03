@@ -502,7 +502,6 @@ annotate_variation.pl -geneanno -buildver hg38 NA12873.avinput /mnt/shared/annov
 >> 
 >> ~~~
 >> $ ls -lrt
->> $ ls /mnt/shared/annovar_db/humandb
 >> ~~~
 >> {: .bash}
 >> 
@@ -513,6 +512,11 @@ annotate_variation.pl -geneanno -buildver hg38 NA12873.avinput /mnt/shared/annov
 >> -rw-r--r--. 1 markd users   976 Jul  3 17:24 NA12873.avinput.log
 >> ~~~
 >> {: .output}
+>> 
+>> ~~~
+>> ls -l /mnt/shared/annovar_db/humandb
+>> ~~~
+>> {: .bash}
 >> ~~~
 >> -rw-r--r--. 1 markd users  1604309113 Aug 26  2015 hg38_AFR.sites.2015_08.txt
 >> -rw-r--r--. 1 markd users    90883126 Aug 26  2015 hg38_AFR.sites.2015_08.txt.idx
