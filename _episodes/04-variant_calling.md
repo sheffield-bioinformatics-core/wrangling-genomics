@@ -496,7 +496,7 @@ annotate_variation.pl -geneanno -buildver hg38 NA12873.avinput /mnt/shared/annov
 
 > ## Exercise
 > 
-> What files did the previous command create? Use the [documentation from annovar](https://annovar.openbioinformatics.org/en/latest/user-guide/gene/) to find out more about them . What other databases can we annotate against?
+> What files did the previous command create? Use the [documentation from annovar](https://annovar.openbioinformatics.org/en/latest/user-guide/gene/) to find out more about them .
 >
 >> ## Solution
 >> 
@@ -511,32 +511,6 @@ annotate_variation.pl -geneanno -buildver hg38 NA12873.avinput /mnt/shared/annov
 >> -rw-r--r--. 1 markd users    63 Jul  3 17:24 NA12873.avinput.exonic_variant_function
 >> -rw-r--r--. 1 markd users   976 Jul  3 17:24 NA12873.avinput.log
 >> ~~~
->> {: .output}
->> 
->> ~~~
->> ls -l /mnt/shared/annovar_db/humandb
->> ~~~
->> {: .bash}
->> ~~~
->> -rw-r--r--. 1 markd users  1604309113 Aug 26  2015 hg38_AFR.sites.2015_08.txt
->> -rw-r--r--. 1 markd users    90883126 Aug 26  2015 hg38_AFR.sites.2015_08.txt.idx
->> -rw-r--r--. 1 markd users  3433533733 Aug 26  2015 hg38_ALL.sites.2015_08.txt
->> -rw-r--r--. 1 markd users    93067467 Aug 26  2015 hg38_ALL.sites.2015_08.txt.idx
->> -rw-r--r--. 1 markd users  1101580669 Aug 26  2015 hg38_AMR.sites.2015_08.txt
->> -rw-r--r--. 1 markd users    89014824 Aug 26  2015 hg38_AMR.sites.2015_08.txt.idx
->> -rw-r--r--. 1 markd users    90849186 Dec  5  2019 hg38_cosmic70.txt
->> -rw-r--r--. 1 markd users     6835907 Dec  5  2019 hg38_cosmic70.txt.idx
->> -rw-r--r--. 1 markd users 14010260483 Dec  5  2019 hg38_dbnsfp30a.txt
->> -rw-r--r--. 1 markd users    18718989 Dec  5  2019 hg38_dbnsfp30a.txt.idx
->> -rw-r--r--. 1 markd users   897573075 Aug 26  2015 hg38_EAS.sites.2015_08.txt
->> -rw-r--r--. 1 markd users    88201363 Aug 26  2015 hg38_EAS.sites.2015_08.txt.idx
->> -rw-r--r--. 1 markd users   920413349 Aug 26  2015 hg38_EUR.sites.2015_08.txt
->> -rw-r--r--. 1 markd users    88194989 Aug 26  2015 hg38_EUR.sites.2015_08.txt.idx
->> -rw-r--r--. 1 markd users           0 Jul  3 12:54 hg38_refGeneMrna.fa
->> -rw-r--r--. 1 markd users    25673940 Aug 18  2020 hg38_refGene.txt
->> -rw-r--r--. 1 markd users  1013377039 Aug 26  2015 hg38_SAS.sites.2015_08.txt
->> -rw-r--r--. 1 markd users    88516260 Aug 26  2015 hg38_SAS.sites.2015_08.txt.idx
->> drwxr-xr-x. 3 markd users        6144 Jul  3 16:26 hg38_seq
 >> {: .output}
 >>
 >> exonic and variant function files are created. Any variants that occur within coding (exon) regions are in the exonic files. All other variants appear in the variant function and categorised according to their closest gene.
