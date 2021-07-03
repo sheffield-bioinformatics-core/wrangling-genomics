@@ -419,8 +419,6 @@ $ bash run_variant_calling.sh
 ~~~
 {: .bash}
 
-# Submitting our script to the cluster
-
 
 
 
