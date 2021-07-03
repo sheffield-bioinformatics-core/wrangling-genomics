@@ -43,32 +43,14 @@ $ gunzip data/ref_genome/chr20.fa.gz
 ~~~
 {: .bash}
 
-> ## Exercise 
-> 
-> Suppose we wanted to download fasta files for all chromosomes numbered 1 to 22. Can you suggest a for loop to download all these files? How would you then joing the files together into a single file? *You do not need to execute the loop as it will take too long to complete*
-> 
->> ## Solution
->> 
->> ~~~
->> $ for i in 1:22
-> do 
-> curl -L -o data/ref_genome/chr${i}.fa.gz
-> https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
-> gunzip data/ref_genome/chr${i}.fa.gz
-> done
-> cat chr${i}.fa > hg38.fa
->> ~~~
->> {: .bash}
->> 
-> {: .solution}
-{: .challenge}
+
 
 
 > ## Downloading genome reference files
 > For convenience, we have downloaded our reference file from the UCSC resource as it provides reference files on a per-chromosome basis. In pratice, you will probably want to download an entire genome for your variant calling. Moreover, you might have a reference organism other than human.
 > Reference genomes for a variety of organisms can be found on [Ensembl](https://www.ensembl.org/Homo_sapiens/Info/Index).
-
 {: .callout}
+
 
 You will also need to create directories for the results that will be generated as part of this workflow. We can do this in a single
 line of code, because `mkdir` can accept multiple new directory
@@ -147,6 +129,25 @@ You will see output that starts like this:
 ~~~
 {: .output}
 
+> ## Exercise 
+> 
+> Suppose we wanted to download fasta files for all chromosomes numbered 1 to 22. Can you suggest a for loop to download all these files? How would you then joing the files together into a single file? *You do not need to execute the loop as it will take too long to complete*
+> 
+>> ## Solution
+>> 
+>> ~~~
+>> $ for i in 1:22
+> do 
+> curl -L -o data/ref_genome/chr${i}.fa.gz
+> https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
+> gunzip data/ref_genome/chr${i}.fa.gz
+> done
+> cat chr$.fa > hg38.fa
+>> ~~~
+>> {: .bash}
+>> 
+> {: .solution}
+{: .challenge}
 
 #### SAM/BAM format
 The [SAM file](https://genome.sph.umich.edu/wiki/SAM),
@@ -437,7 +438,7 @@ Depending on our application, we might also want to discard variants that are co
 
 ## Variant Annotation
 
-### Why do we need to *annoate* our variants?
+### Why do we need to *annotate* our variants?
 
 - Can have huge list of variants after SNV-calling
   + in the order of *millions* even after filtering
@@ -493,21 +494,31 @@ annotate_variation.pl -geneanno -buildver hg38 NA12873.avinput /mnt/shared/annov
 ~~~
 {: .bash}
 
-> ## Exercise 
+> ## Exercise
 > 
-> What files did the previous command create? Use the documentation from annovar to find out more about them https://annovar.openbioinformatics.org/en/latest/user-guide/gene/. What other databases can we annotate against?
-> 
+> What files did the previous command create? Use the [documentation from annovar](https://annovar.openbioinformatics.org/en/latest/user-guide/gene/) to find out more about them . What other databases can we annotate against?
+>
 >> ## Solution
->>  
+>> 
 >> ~~~
-> ls -lrt
-> ls /mnt/shared/annovar_db/humandb
-> 
+>> $ ls -lrt
+>> $ ls /mnt/shared/annovar_db/humandb
 >> ~~~
 >> {: .bash}
+>> 
+>> ~~~ 
+>> -rw-r--r--. 1 markd users  9034 Jul  3 17:23 NA12873.avinput
+>> -rw-r--r--. 1 markd users 16949 Jul  3 17:24 NA12873.avinput.variant_function
+>> -rw-r--r--. 1 markd users    63 Jul  3 17:24 NA12873.avinput.exonic_variant_function
+>> -rw-r--r--. 1 markd users   976 Jul  3 17:24 NA12873.avinput.log
+>> ~~~
+>> {: .output}
+>>
 >> exonic and variant function files are created. Any variants that occur within coding (exon) regions are in the exonic files. All other variants appear in the variant function and categorised according to their closest gene.
 > {: .solution}
 {: .challenge}
+
+
 
 
 The `annotate_variation.pl` script can be applied in this manner to other databases that we have downloaded which will quickly result in a large number of files in the directory.
