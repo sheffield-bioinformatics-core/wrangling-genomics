@@ -430,7 +430,7 @@ The [`vcftools`](https://vcftools.github.io/index.html) suite of software allows
 
 ~~~
 module load VCFtools
-vcftools --vcf results/vcf/NA12873.chr20.vcf -minQ 20 --recode --recode-INFO-all --out results/vcf/NA12873.chr20_final.vcf
+vcftools --vcf results/vcf/NA12873.chr20.vcf --minQ 20 --recode --recode-INFO-all --out results/vcf/NA12873.chr20_filtered.vcf
 ~~~
 {:bash}
 

@@ -279,7 +279,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     
     freebayes -f $genome $sorted_bam > $variants
 
-    vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
+    vcftools --vcf $variants --minQ 20 --recode --recode-INFO-all --out $variants_filtered
     convert2annovar.pl -format vcf4 $variants_filtered > $annovar_input
     
     ## Need to change directory as annovar will create output in the working directory
@@ -370,7 +370,7 @@ We can use the `base` variable to access both the `base_1.fastq` and `base_2.fas
     variants=~/dc_workshop/results/bcf/${base}_chr20.vcf
     variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered.vcf 
     annovar_input==~/dc_workshop/results/vcf_annotated/${base}_avinput 
-
+    annovar_db=~/dc_workshop/results/vcf_annotated/humandb
 
 ~~~
 {: .bash}
@@ -411,7 +411,7 @@ And finally, the actual workflow steps:
 
 ~~~
     freebayes -f $genome $sorted_bam > $variants
-    vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
+    vcftools --vcf $variants --minQ 20 --recode --recode-INFO-all --out $variants_filtered
 ~~~
 {: .output}
 
@@ -420,7 +420,7 @@ And finally, the actual workflow steps:
 ~~~
 vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
 convert2annovar.pl -format vcf4 $variants_filtered > $annovar_input
-table_annovar.pl $annovar_input humandb/ -buildver hg38 -out $base_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
+table_annovar.pl $annovar_input $annovar_db -buildver hg38 -out $base_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
 
 ~~~
 {: .output}

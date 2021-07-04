@@ -39,7 +39,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     
     freebayes -f $genome $sorted_bam > $variants
 
-    vcftools --vcf $variants -minQ 20 --recode --recode-INFO-all --out $variants_filtered
+    vcftools --vcf $variants --minQ 20 --recode --recode-INFO-all --out $variants_filtered
     convert2annovar.pl -format vcf4 $variants_filtered > $annovar_input
     
     ## Need to change directory as annovar will create output in the working directory
