@@ -1,3 +1,4 @@
+
 set -e
 cd ~/dc_workshop/results
 
@@ -26,10 +27,10 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
     variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
-    variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered.vcf 
+    variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered
     
     annovar_input=~/dc_workshop/results/vcf_annotated/${base}_avinput 
-    annovar_db=~/dc_workshop/results/vcf_annotated/humandb
+    annovar_db=~/mnt/shared/annovar_db/humandb
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
     samtools sort -o $sorted_bam $bam 
@@ -40,11 +41,9 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     freebayes -f $genome $sorted_bam > $variants
 
     vcftools --vcf $variants --minQ 20 --recode --recode-INFO-all --out $variants_filtered
-    convert2annovar.pl -format vcf4 $variants_filtered > $annovar_input
+    convert2annovar.pl -format vcf4 ${variants_filtered}.recode.vcf > $annovar_input
     
     ## Need to change directory as annovar will create output in the working directory
     cd ~/dc_workshop/results/vcf_annotated/
     
     table_annovar.pl $annovar_input $annovar_db -buildver hg38 -out ${base}_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
-
-    done

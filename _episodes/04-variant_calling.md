@@ -57,7 +57,7 @@ line of code, because `mkdir` can accept multiple new directory
 names as input.
 
 ~~~
-$ mkdir -p results/sam results/bam results/bcf results/vcf
+$ mkdir -p results/sam results/bam  results/vcf results/vcf_annotated
 ~~~
 {: .bash}
 
@@ -430,7 +430,7 @@ The [`vcftools`](https://vcftools.github.io/index.html) suite of software allows
 
 ~~~
 module load VCFtools
-vcftools --vcf results/vcf/NA12873.chr20.vcf --minQ 20 --recode --recode-INFO-all --out results/vcf/NA12873.chr20_filtered.vcf
+vcftools --vcf results/vcf/NA12873_chr20.vcf --minQ 20 --recode --recode-INFO-all --out results/vcf/NA12873_chr20_filtered
 ~~~
 {:bash}
 
@@ -462,7 +462,7 @@ mkdir -p ~/dc_workshop/results/vcf_annotated
 ~~~
 cd ~/dc_workshop/results/vcf_annotated
 module load annovar
-convert2annovar.pl -format vcf4 ../vcf/NA12873.chr20_final.vcf > NA12873.avinput
+convert2annovar.pl -format vcf4 ../vcf/NA12873_chr20_filtered.recode.vcf > NA12873.avinput
 ~~~
 {: .bash}
 
