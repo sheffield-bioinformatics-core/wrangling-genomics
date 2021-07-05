@@ -441,12 +441,12 @@ $ mkdir -p ~/Desktop/fastqc_html
 Now we can transfer our HTML files to our local computer using `scp`.
 
 ~~~
-$ scp <your_username>@54.216.156.214:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
+$ scp <your_username>@54.228.79.33:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
 ~~~
 {: .bash}
 
 As a reminder, the first part
-of the command `<your_username>@54.216.156.214` is
+of the command `<your_username>@54.228.79.33` is
 the address for your remote computer. Make sure you replace `<your_username>` with your username for this workshop (the one you used to log in). 
 
 The second part starts with a `:` and then gives the absolute path
