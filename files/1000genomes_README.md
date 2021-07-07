@@ -6,13 +6,15 @@ TODO: More details here
 
 Download chromosome 20 bam (aligned) data from 1000 genomes
  
-```wget ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/phase3/data/NA12878/alignment/NA12878.chrom20.ILLUMINA.bwa.CEU.low_coverage.20121211.bam -O NA12878.chr20.bam
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/phase3/data/NA12878/alignment/NA12878.chrom20.ILLUMINA.bwa.CEU.low_coverage.20121211.bam -O NA12878.chr20.bam
 ```
 
 Index
 
-``
+```
 samtools index NA12878.chr20.bam
+
 ```
 
 Sort by name so we can extract paired reads
