@@ -82,7 +82,7 @@ scp /mnt/shared/1000_genomes_subset/NA12878_R2.fq.gz .
 The data comes in a compressed format, which is why there is a `.gz` at the end of the file names. This makes it faster to transfer, and allows it to take up less space on our computer. Let's unzip one of the files so that we can look at the fastq format.
 
 ~~~
-$ gunzip NA128731_R1.fq.gz
+$ gunzip NA12873_R1.fq.gz
 ~~~
 {: .bash}
 
@@ -108,7 +108,7 @@ We can view the first complete read in one of the files our dataset by using `he
 the first four lines. 
 
 ~~~
-$ head -n 4 NA128731_R1.fastq 
+$ head -n 4 NA12873_R1.fq 
 ~~~
 {: .bash}
 
@@ -378,7 +378,7 @@ NA12873_R1.fq           NA12874_R1_fastqc.html  NA12878_R1_fastqc.zip
 NA12873_R1_fastqc.html  NA12874_R1_fastqc.zip   NA12878_R2.fq.gz
 NA12873_R1_fastqc.zip   NA12874_R2.fq.gz        NA12878_R2_fastqc.html
 NA12873_R2.fq.gz        NA12874_R2_fastqc.html  NA12878_R2_fastqc.zip
-NA12873_R2_fastqc.html  NA12874_R2_fastqc.zip   SRR622461_1.filt.fastq.gz
+NA12873_R2_fastqc.html  NA12874_R2_fastqc.zip   
 NA12873_R2_fastqc.zip   NA12878_R1.fq.gz
 NA12874_R1.fq.gz        NA12878_R1_fastqc.html
 ~~~
@@ -441,12 +441,12 @@ $ mkdir -p ~/Desktop/fastqc_html
 Now we can transfer our HTML files to our local computer using `scp`.
 
 ~~~
-$ scp <your_username>@54.228.79.33:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
+$ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
 ~~~
 {: .bash}
 
 As a reminder, the first part
-of the command `<your_username>@54.228.79.33` is
+of the command `<your_username>@ephemeron.n8cir.org.uk` is
 the address for your remote computer. Make sure you replace `<your_username>` with your username for this workshop (the one you used to log in). 
 
 The second part starts with a `:` and then gives the absolute path
