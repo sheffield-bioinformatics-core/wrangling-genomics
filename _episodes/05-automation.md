@@ -21,7 +21,8 @@ FASTQ files and put them into a new file.
 Here's the script you wrote:
 
 ~~~
-FILE=dmel-all-r6.19.gtf
+# set our variable to the name of our GTF file
+FILE=GRCh38_chr20.gtf
 
 # call wc -l on our file
 wc -l $FILE
@@ -367,7 +368,7 @@ We can use the `base` variable to access both the `base_1.fastq` and `base_2.fas
     sam=~/dc_workshop/results/sam/${base}.aligned.sam
     bam=~/dc_workshop/results/bam/${base}.aligned.bam
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
-    variants=~/dc_workshop/results/bcf/${base}_chr20.vcf
+    variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
     variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered
     annovar_input==~/dc_workshop/results/vcf_annotated/${base}_avinput 
     annovar_db=~/mnt/shared/annovar_db/humandb

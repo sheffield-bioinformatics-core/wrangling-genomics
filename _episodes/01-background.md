@@ -42,7 +42,7 @@ We are going to use a sequencing dataset from healthy humans.
  
 ## View the Metadata
 
-The metadata file associated with this lesson can be [downloaded directly here](https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/1000_genomes_meta.tsv) or [viewed in Github](https://github.com/sheffield-bioinformatics-core/wrangling-genomics/blob/gh-pages/files/1000_genomes_meta.tsv). If you would like to know details of how the file was created, you can look at [some notes and sources here](https://github.com/datacarpentry/wrangling-genomics/blob/gh-pages/files/1000genomes_README.md).
+The metadata file associated with this lesson can be [downloaded directly here](https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/1000_genomes_meta.tsv) (right-click and Save Link as) or [viewed in Github](https://github.com/sheffield-bioinformatics-core/wrangling-genomics/blob/gh-pages/files/1000_genomes_meta.tsv). If you would like to know details of how the file was created, you can look at [some notes and sources here](https://github.com/sheffield-bioinformatics-core/wrangling-genomics/blob/gh-pages/files//1000genomes_README.md).
 
 
 

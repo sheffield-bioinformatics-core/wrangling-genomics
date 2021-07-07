@@ -394,9 +394,9 @@ with your AWS instance number. The commands to `scp` always go in the terminal w
 local computer (not your AWS instance).
 
 ~~~
-$ scp <your_username>@54.228.79.33:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam ~/Desktop/files_for_igv
-$ scp <your_username>@54.228.79.33:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam.bai ~/Desktop/files_for_igv
-$ scp <your_username>@54.228.79.33:~/dc_workshop/results/vcf/NA12873.chr20.vcf ~/Desktop/files_for_igv
+$ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam ~/Desktop/files_for_igv
+$ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam.bai ~/Desktop/files_for_igv
+$ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/vcf/NA12873.chr20.vcf ~/Desktop/files_for_igv
 ~~~
 {: .bash}
 
