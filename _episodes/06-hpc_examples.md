@@ -53,4 +53,14 @@ We have automated our analysis and it should hopefully work on larger sample siz
 Our workflow processes individuals in a sequential manner; i.e. NA12874 is aligned only after all the steps for NA12873 have completed. This is clearly inefficient as the processing of NA12874 is **completely independent** of NA12873 so there is no reason why we should wait to complete NA12873 before starting the analysis of NA12874. The term for this is [Embarrassing parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel), or pleasingly parallel. Such a situation can be solved using a technique called a job array or task array 
 
 
+# Next steps: Workflow Managers and Reproducible Pipelines
+
+At this point in the course we hope that you have gained an understanding of what it means to write and run a Bioinformatics script on HPC infrastructure; and how to troubleshoot if things goes wrong. 
+
+However, in practice we would **not** recommend that you now start to write and develop your own pipelines from scratch. In all researchers wrote their own pipelines from scratch, this would lead to a huge amount of redundancy and discrepancies in the manner in which data are processed. 
+
+Many Bioinformaticians instead prefer to use tried-and-tested *best practice* pipelines for data processing; especially for steps such as alignment where the tools are established and well-understood.
+
+
+
 
