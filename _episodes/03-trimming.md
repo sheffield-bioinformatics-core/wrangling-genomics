@@ -1,7 +1,7 @@
 ---
 title: "Trimming and Filtering"
 teaching: 30
-exercises: 25
+exercises: 5
 questions:
 - "How can I get rid of sequence data that doesn't meet my quality standards?"
 objectives:
@@ -36,7 +36,7 @@ $ module load Trimmomatic
 ~~~
 {: .bash}
 
-Upon loading it suggests the following command to run, which seema like quite a lot of typing and prone to mistakes
+Upon loading it suggests the following command to run, which seems like quite a lot of typing and prone to mistakes
 
 ~~~
 To execute Trimmomatic run: java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar
@@ -116,7 +116,7 @@ In this example, we've told Trimmomatic:
 | code   | meaning |
 | ------- | ---------- |
 | `PE` | that it will be taking a paired end file as input |
-| `-threads 4` | to use four computing threads to run (this will spead up our run) |
+| `-threads 4` | to use four computing threads to run (this will speed up our run) |
 | `SRR_1056_1.fastq` | the first input file name |
 | `SRR_1056_2.fastq` | the second input file name |
 | `SRR_1056_1.trimmed.fastq` | the output file for surviving pairs from the `_1` file |
@@ -276,7 +276,7 @@ NA12873_1untrim.fq.gz    NA12873_R2un.trim.fq.gz         NA12874_R1_fastqc.html 
 NA12873_2.trim.fq.gz     NA12873_trimmed_R1.fq           NA12874_R1_fastqc.zip   NA12878_R2_fastqc.html
 NA12873_2untrim.fq.gz    NA12873_trimmed_R1_fastqc.html  NA12874_R2.fq.gz        NA12878_R2_fastqc.zip
 NA12873_R1.fq.gz         NA12873_trimmed_R1_fastqc.zip   NA12874_R2_fastqc.html  NexteraPE-PE.fa
-NA12873_R1.trim.fq.gz    NA12873_trimmed_R2.fq           NA12874_R2_fastqc.zip   SRR622461_1.filt.fastq.gz
+NA12873_R1.trim.fq.gz    NA12873_trimmed_R2.fq           NA12874_R2_fastqc.zip   
 NA12873_R1_fastqc.html   NA12873_untrimmed_R1.fq         NA12878_1.trim.fq.gz    multiqc_data
 NA12873_R1_fastqc.zip    NA12873_untrimmed_R2.fq         NA12878_1untrim.fq.gz   multiqc_report.html
 NA12873_R1un.trim.fq.gz  NA12874_1.trim.fq.gz            NA12878_2.trim.fq.gz    qc_report
@@ -321,7 +321,7 @@ NA12873_R1un.trim.fq.gz  NA12873_R2un.trim.fq.gz  NA12874_R1un.trim.fq.gz  NA128
 >> In your AWS terminal window do:
 >>
 >> ~~~
->> $ fastqc ~/dc_workshop/data/trimmed_fastq/*.fastq*
+>> $ fastqc ~/dc_workshop/data/trimmed_fastq/*.fq*
 >> ~~~
 >> {: .bash}
 >>
@@ -329,7 +329,7 @@ NA12873_R1un.trim.fq.gz  NA12873_R2un.trim.fq.gz  NA12874_R1un.trim.fq.gz  NA128
 >>
 >> ~~~
 >> $ mkdir ~/Desktop/fastqc_html/trimmed
->> $ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/data/trimmed_fastq/*.html ~/Desktop/fastqc_html/trimmed
+>> $ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/data/trimmed_fastq/*.html ~/Desktop/fastqc_html/trimmed
 >> ~~~
 >> {: .bash}
 >> 
