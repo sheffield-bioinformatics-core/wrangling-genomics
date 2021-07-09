@@ -140,24 +140,6 @@ You will see output that starts like this:
 ~~~
 {: .output}
 
-> ## Exercise 
-> 
-> Suppose we wanted to download fasta files for all chromosomes numbered 1 to 22. Can you suggest a for loop to download all these files? How would you then joing the files together into a single file? *You do not need to execute the loop as it will take too long to complete*
-> 
->> ## Solution
->> 
->> ~~~
->> $ for i in 1:22
-> do 
-> curl -L -o data/ref_genome/chr${i}.fa.gz https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
-> gunzip data/ref_genome/chr${i}.fa.gz
-> done
-> cat chr$.fa > hg38.fa
->> ~~~
->> {: .bash}
->> 
-> {: .solution}
-{: .challenge}
 
 #### SAM/BAM format
 The [SAM file](https://genome.sph.umich.edu/wiki/SAM),
