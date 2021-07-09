@@ -59,8 +59,8 @@ At this point in the course we hope that you have gained an understanding of wha
 
 However, in practice we would **not** recommend that you now start to write and develop your own pipelines from scratch. In all researchers wrote their own pipelines from scratch, this would lead to a huge amount of redundancy and discrepancies in the manner in which data are processed. 
 
-Many Bioinformaticians instead prefer to use tried-and-tested *best practice* pipelines for data processing; especially for steps such as alignment where the tools are established and well-understood.
+Many Bioinformaticians instead prefer to use tried-and-tested *best practice* pipelines for data processing; especially for steps such as alignment where the tools are established, well-understood and don't usually require much intervention from the user. 
 
 
-
+A few *workflow manager* tools also exist, the purpose of which is to manage to monitor the submission of jobs without requiring the user to monitor the workflow and manage scripts that are dependent on the outputs of others. In other words, alignment of samples will automatically be triggered once the workflow manager detects that trimming has been completed; even if the commands to perform trimming and alignment are found in different scripts.
 

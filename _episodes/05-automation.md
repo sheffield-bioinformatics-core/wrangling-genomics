@@ -370,7 +370,7 @@ We can use the `base` variable to access both the `base_1.fastq` and `base_2.fas
     sorted_bam=~/dc_workshop/results/bam/${base}.aligned.sorted.bam
     variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
     variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered
-    annovar_input==~/dc_workshop/results/vcf_annotated/${base}_avinput 
+    annovar_input=~/dc_workshop/results/vcf_annotated/${base}_avinput 
     annovar_db=~/mnt/shared/annovar_db/humandb
 
 ~~~

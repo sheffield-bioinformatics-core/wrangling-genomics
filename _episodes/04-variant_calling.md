@@ -109,9 +109,10 @@ The alignment process consists of choosing an appropriate reference genome to ma
 aligner. We will use the BWA-MEM algorithm, which is the latest and is generally recommended for high-quality queries as it 
 is faster and more accurate.
 
-An example of what a `bwa` command looks like is below. This command will not run, as we do not have the files `ref_genome.fa`, `input_file_R1.fastq`, or `input_file_R2.fastq`.
+An example of what a `bwa` command looks like is below. **The order in which we write the input files is important**. This command will not run, as we do not have the files `ref_genome.fa`, `input_file_R1.fastq`, or `input_file_R2.fastq`.
 
 ~~~
+$ ## example code - do not run
 $ bwa mem ref_genome.fasta input_file_R1.fastq input_file_R2.fastq > output.sam
 ~~~
 {: .bash}
@@ -416,7 +417,7 @@ Use [this website](http://software.broadinstitute.org/software/igv/AlignmentData
 
 By default, `freebayes` reports all possible variants and the calls it makes may be of varying quality. Even though we have previously trimmed unreliable bases from our dataset we may still identify positions that look like they are mutations, but are in fact artefects. `freebayes` assigns a *quality* score to each call that it makes and these can be used to filter the results. The quality scores are not particularly easy to interpret or assign a cut-off to; except that a lower quality means a mutation with less evidence to support it.
 
-The [`vcftools`](https://vcftools.github.io/index.html) suite of software allows various filtering operations to be performed. For this workshop we will remove all variants below an acceptable threshold, but in practice other filters should be applied such as requiring a minimum *depth* of sequencing. We cannot apply such a filter her due to the restricted nature of our dataset.
+The [`vcftools`](https://vcftools.github.io/index.html) suite of software allows various filtering operations to be performed. For this workshop we will remove all variants below an acceptable threshold, but in practice other filters should be applied such as requiring a minimum *depth* of sequencing. We cannot apply such a filter her due to the restricted nature of our dataset. The `--recode` option means that filtered variants are written to a new file, and the `--out` argument is used to specify a name for the output file.
 
 ~~~
 module load VCFtools
@@ -438,7 +439,7 @@ Depending on our application, we might also want to discard variants that are co
 in previous studies
   + amongst healthy / diseased individuals
 
-There are many annotation resources available, but we have chosen to demonstrate `annovar`. There is an overhead associated with downloading the required annotation files, and a lot of disk space is consumed. However, you will hopefully agree that once configured it is relatively easy to use. `annovar` is a suite of `perl` scripts that can perform a variety of annotation and filtering tasks. It can also collate the results from annotating against different databases into one convenient table.
+There are many annotation resources available, but we have chosen to demonstrate `annovar`. There is an overhead associated with downloading the required annotation files, and a lot of disk space is consumed. However, you will hopefully agree that once configured it is relatively easy to use. `annovar` is a suite of `perl` scripts that can perform a variety of annotation and filtering tasks. However, we do not need to be familiar with `perl` in order to use it. It can also collate the results from annotating against different databases into one convenient table.
 
 Let's create a directory for our annotated results
 
