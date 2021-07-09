@@ -7,7 +7,6 @@ questions:
 objectives:
 - "Explain how a FASTQ file encodes per-base quality scores."
 - "Interpret a FastQC plot summarizing per-base quality across all reads."
-- "Use `for` loops to automate operations on multiple files."
 keypoints:
 - "Quality encodings vary across sequencing platforms."
 - "fastqc and multiqc can generate quality control reports for sequencing data"
@@ -42,13 +41,11 @@ built under the assumption that the data will be provided in a specific format.
 
 Often times, the first step in a bioinformatic workflow is getting the data you want to work with onto a computer where you can work with it. If you have outsourced sequencing of your data, the sequencing center will usually provide you with a link that you can use to download your data. Today we will be working with publicly available sequencing data.
 
-We are studying a subset of *1000 genomes* data that have been reduced in size to help  the workshop run more efficiently.
-
-
+We are studying a subset of *1000 genomes* data that have been reduced in size to help the workshop run more efficiently. The data have been copied to a *shared folder* that you all have access.
 
 To download the data, run the commands below. 
 
-Here we are using the `-p` option for `mkdir`. This option allows `mkdir` to create the new directory, even if one of the parent directories doesn't already exist. It also supresses errors if the directory already exists, without overwriting that directory. 
+Here we are using the `-p` option for `mkdir`. This option allows `mkdir` to create the new directory, even if one of the parent directories doesn't already exist. It also suppresses errors if the directory already exists, without overwriting that directory. 
 
 
 ~~~
@@ -85,6 +82,11 @@ The data comes in a compressed format, which is why there is a `.gz` at the end 
 $ gunzip NA12873_R1.fq.gz
 ~~~
 {: .bash}
+
+> ## File extensions
+> 
+> The files we are processing are known as "fastq", but as we mentioned previously command-line systems are not fussy about what extension a particular file has. The files in our dataset all end `.fq.gz`, but you might come across files that end in `.fastq.gz`. It shouldn't matter to the software you use, so long as they contents are laid out (formatted) according to the same specification. 
+{: .callout}
 
 # Quality Control
 
@@ -166,7 +168,7 @@ very poor (`#` = a quality score of 2).
 
 > ## Exercise
 > 
-> What is the last read in the `NA12873_R1.fq ` file? How confident
+> What is the last read in the `NA12873_R1.fq` file? How confident
 > are you in this read? 
 > 
 >> ## Solution
@@ -191,7 +193,14 @@ very poor (`#` = a quality score of 2).
 > {: .solution}
 {: .challenge}
 
-At this point, lets validate that all the relevant tools are installed. If you are using the AWS AMI then these _should_ be preinstalled. 
+
+## Assessing Quality using FastQC
+In real life, you won't be assessing the quality of your reads by visually inspecting your 
+FASTQ files. Rather, you'll be using a software program to assess read quality and 
+filter out poor quality reads. We'll first use a program called [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to visualize the quality of our reads. 
+Later in our workflow, we'll use another program to filter out poor quality reads. 
+
+At this point, lets validate that all the relevant tools are installed. If you are using the cluster-in-the-cloud then these _should_ be preinstalled. 
 
 
 ~~~
@@ -251,7 +260,7 @@ Lmod has detected the following error:  The following module(s) are unknown: "Fa
 
 Please check the spelling or version number. Also try "module spider ..."
 It is also possible your cache file is out-of-date; it may help to try:
-  $ module --ignore-cache load "fastqc"
+  $ module --ignore-cache load "FastQC"
 
 Also make sure that all modulefiles written in TCL start with the string #%Module
 
@@ -259,11 +268,6 @@ Also make sure that all modulefiles written in TCL start with the string #%Modul
 
 If this happens check with your instructor before trying to install it. 
 
-## Assessing Quality using FastQC
-In real life, you won't be assessing the quality of your reads by visually inspecting your 
-FASTQ files. Rather, you'll be using a software program to assess read quality and 
-filter out poor quality reads. We'll first use a program called [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to visualize the quality of our reads. 
-Later in our workflow, we'll use another program to filter out poor quality reads. 
 
 FastQC has a number of features which can give you a quick impression of any problems your
 data may have, so you can take these issues into consideration before moving forward with your
