@@ -83,12 +83,10 @@ This metadata describes information on the samples sequences as part of the data
 > {: .solution}
 {: .challenge}
 
+
 > ## Creating and editing metadata
 > 
 > The metadata for a project is usually entered *by-hand* using software such as Microsoft Excel. When creating such metadata it would be good to bear in mind some common errors that can be inadvertently introduced that complicate computational analysis. These materials from Data Carpentry can be consulted if you are not sure about this:-[https://datacarpentry.org/spreadsheet-ecology-lesson/02-common-mistakes/index.html](https://datacarpentry.org/spreadsheet-ecology-lesson/02-common-mistakes/index.html)
-
-
-
 {: .callout}
 
 
