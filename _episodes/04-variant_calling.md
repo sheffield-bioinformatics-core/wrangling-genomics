@@ -14,7 +14,18 @@ keypoints:
 - "There are many different file formats for storing genomics data. It's important to understand what type of information is contained in each file, and how it was derived."
 ---
 
-We mentioned before that we are working with files from the 1000 genomes project. Now that we have looked at our data to make sure that it is high quality, and removed low-quality base calls, we can perform variant calling to see how the population changed over time. We care what mutations these individuals have relative to a *healthy* individual.Therefore, we will align each of our samples to chromosome 20 of the human reference genome, and see what differences exist in our reads versus the genome.
+We mentioned before that we are working with files from the 1000 genomes project. Now that we have looked at our data to make sure that it is high quality, and removed low-quality base calls, we can perform variant calling to see how the population changed over time. We care what mutations these individuals have relative to a *typical* individual. Therefore, we will align each of our samples to chromosome 20 of the human reference genome and see what differences exist in our reads versus the genome.
+
+# Input files for this section
+
+If you were unable to complete the previous section on Trimming, or it was skipped in the interest of time, you can find the trimmed fastq files in a shared folder. These can be copied to our directory.
+
+~~~
+$ cd ~/dc_workshop
+$ mkdir -p data/trimmed_fastq
+$ scp /mnt/shared/1000_genomes_subset/trimmed_fastq/*.trim.fq.gz data/trimmed_fastq
+~~~
+{: .bash}
 
 # Alignment to a reference genome
 
@@ -138,8 +149,7 @@ You will see output that starts like this:
 >> ~~~
 >> $ for i in 1:22
 > do 
-> curl -L -o data/ref_genome/chr${i}.fa.gz
-> https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
+> curl -L -o data/ref_genome/chr${i}.fa.gz https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr${i}.fa.gz
 > gunzip data/ref_genome/chr${i}.fa.gz
 > done
 > cat chr$.fa > hg38.fa
@@ -233,9 +243,7 @@ variant calling. In this workshop we will be using `freebayes`.
 
 ### Calling mutations for a single sample
 
-We are going to use freebayes to call SNVs on some 1000 genomes samples. In order to make the SNV-calling run in a reasonable time, we are only considering reads aligned to chromosome 20 in this analysis. 
-
-The minimal requirements to run `freebayes` (and why it is appealing for this practical!) are a reference genome and a `.bam` file. The -f parameter is used to specify the location of a reference genome in `.fasta` format.
+The minimal requirements to run `freebayes` (and why it is appealing for this practical!) are a reference genome and a `.bam` file containing information about the *aligned* reads. The -f parameter is used to specify the location of a reference genome in `.fasta` format.
 
 A minimal command to call mutations on the sample `NA12873` is therefore:-
 
@@ -253,7 +261,7 @@ What we need to do is direct the output to a file. We can call the output file a
 Although it is not mandatory, we give the output file the extension `.vcf`. The `.vcf` format is a commonly-adopted standard for variant calls, which we will look into detail next.
 
 ~~~
-$ freebayes -f data/ref_genome/chr20.fa results/bam/NA12873.aligned.sorted.bam > results/vcf/NA12873.chr20.vcf
+$ freebayes -f data/ref_genome/chr20.fa results/bam/NA12873.aligned.sorted.bam > results/vcf/NA12873_chr20.vcf
 ~~~
 {: .bash}
 
@@ -261,7 +269,7 @@ $ freebayes -f data/ref_genome/chr20.fa results/bam/NA12873.aligned.sorted.bam >
 ## Explore the VCF format:
 
 ~~~
-$ less -S results/vcf/NA12873.chr20.vcf
+$ less -S results/vcf/NA12873_chr20.vcf
 ~~~
 {: .bash}
 
@@ -344,7 +352,7 @@ to learn more about the VCF file format.
 >> ## Solution
 >> 
 >> ~~~
->> $ grep -v "#" results/vcf/NA12873.chr20.vcf | wc -l
+>> $ grep -v "#" results/vcf/NA12873_chr20.vcf | wc -l
 >> ~~~
 >> {: .bash}
 >> 
@@ -359,8 +367,8 @@ to learn more about the VCF file format.
 
 ## Assess the alignment (visualization) - optional step
 
-It is often instructive to look at your data in a genome browser. Visualization will allow you to get a "feel" for 
-the data, as well as detecting abnormalities and problems. Also, exploring the data in such a way may give you 
+**It is often instructive to look at your data in a genome browser. Visualization will allow you to get a "feel" for 
+the data, as well as detecting abnormalities and problems**. Also, exploring the data in such a way may give you 
 ideas for further analyses.  As such, visualization tools are useful for exploratory analysis. In this lesson we 
 will describe two different tools for visualization: a light-weight command-line based one and the Broad
 Institute's Integrative Genomics Viewer (IGV) which requires
@@ -396,7 +404,7 @@ local computer (not your AWS instance).
 ~~~
 $ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam ~/Desktop/files_for_igv
 $ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/bam/NA12873.aligned.sorted.bam.bai ~/Desktop/files_for_igv
-$ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/vcf/NA12873.chr20.vcf ~/Desktop/files_for_igv
+$ scp <your_username>@ephemeron.n8cir.org.uk:~/dc_workshop/results/vcf/NA12873_chr20.vcf ~/Desktop/files_for_igv
 ~~~
 {: .bash}
 
@@ -406,7 +414,7 @@ to unzip it, and then drag the program into your Applications folder.
 
 1. Open IGV.
 2. Load our BAM file (`NA12873.aligned.sorted.bam`) using the **"Load from File..."** option under the **"File"** pull-down menu. 
-3.  Do the same with our VCF file (`NA12873.chr20.vcf`).
+3.  Do the same with our VCF file (`NA12873_chr20.vcf`).
 
 Your IGV browser should look like the screenshot below:
 
