@@ -42,7 +42,7 @@ see why we want to automate this.
 We've also used `for` loops in previous lessons to iterate one or two commands over multiple input files. 
 In these `for` loops, the filename was defined as a variable in the `for` statement, which enabled you to run the loop on multiple files. We will be using variable assignments like this in our new shell scripts.
 
-Here's the one you wrote for running Trimmomatic on all of our `.fastq` sample files:
+Here's the one you wrote for running Trimmomatic on all of our `.fq` sample files:
 
 ~~~
 $ for infile in *_R1.fq.gz
@@ -210,7 +210,7 @@ our scripts.
 
 We can extend these principles to the entire variant calling workflow. To do this, we will take all of the individual commands that we wrote before, put them into a single file, add variables so that the script knows to iterate through our input files and write to the appropriate output files. This is very similar to what we did with our `read_qc.sh` script, but will be a bit more complex.
 
-Download the script from [here](https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/run_variant_calling.sh). Download to `~/dc_workshop/scripts`.
+The script can be downloaded from [here](https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/run_variant_calling.sh) or downloaded directly to `~/dc_workshop/scripts` with `curl`.
 
 ~~~
 curl -O https://raw.githubusercontent.com/sheffield-bioinformatics-core/wrangling-genomics/gh-pages/files/run_variant_calling.sh
@@ -351,7 +351,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
 ~~~
 {: .bash}
 
-We then extract the base name of the file (excluding the path and `.fastq` extension) and assign it
+We then extract the base name of the file (excluding the path and `.fq` extension) and assign it
 to a new variable called `base`. 
 ~~~
     base=$(basename $fq1 _R1.trim.fq.gz)
@@ -359,7 +359,7 @@ to a new variable called `base`.
 ~~~
 {: .bash}
 
-We can use the `base` variable to access both the `base_1.fastq` and `base_2.fastq` input files, and create variables to store the names of our output files. This makes the script easier to read because we don't need to type out the full name of each of the files: instead, we use the `base` variable, but add a different extension (e.g. `.sam`, `.bam`) for each file produced by our workflow.
+We can use the `base` variable to access both the `base_1.fq` and `base_2.fq` input files, and create variables to store the names of our output files. This makes the script easier to read because we don't need to type out the full name of each of the files: instead, we use the `base` variable, but add a different extension (e.g. `.sam`, `.bam`) for each file produced by our workflow.
 
 
 ~~~
