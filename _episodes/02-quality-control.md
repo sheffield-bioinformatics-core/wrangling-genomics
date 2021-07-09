@@ -1,7 +1,7 @@
 ---
 title: "Assessing Read Quality"
 teaching: 30
-exercises: 20
+exercises: 15
 questions:
 - "How can I describe the quality of my data?"
 objectives:
@@ -9,7 +9,7 @@ objectives:
 - "Interpret a FastQC plot summarizing per-base quality across all reads."
 keypoints:
 - "Quality encodings vary across sequencing platforms."
-- "fastqc and multiqc can generate quality control reports for sequencing data"
+- "FastQC and multiqc can generate quality control reports for sequencing data"
 ---
 <img src="../img/logo-sm.png" align=right>
 
@@ -196,9 +196,9 @@ very poor (`#` = a quality score of 2).
 
 ## Assessing Quality using FastQC
 In real life, you won't be assessing the quality of your reads by visually inspecting your 
-FASTQ files. Rather, you'll be using a software program to assess read quality and 
-filter out poor quality reads. We'll first use a program called [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to visualize the quality of our reads. 
-Later in our workflow, we'll use another program to filter out poor quality reads. 
+fastq files. Rather, you'll be using software programs to assess read quality and 
+filter out poor quality reads. We'll first use a program called [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to *visualize* the quality of our reads. 
+Later in our workflow, we'll use another program to *filter out* poor quality reads. 
 
 At this point, lets validate that all the relevant tools are installed. If you are using the cluster-in-the-cloud then these _should_ be preinstalled. 
 
@@ -246,14 +246,14 @@ $ module avail
 ~~~
 {: .output}
 
-The module relevant for QC purposes is called `FastQC`.
+The module relevant for QC purposes is called `FastQC`
 
 ~~~
 module load FastQC
 ~~~
 {: .bash}
 
-if fastqc is not installed then you would expect to see an error like
+if FastQC is not installed then you would expect to see an error like
 
 ~~~
 Lmod has detected the following error:  The following module(s) are unknown: "FastQC"
@@ -305,35 +305,8 @@ $ cd ~/dc_workshop/data/untrimmed_fastq/
 ~~~
 {: .bash}
 
-> ## Exercise
-> 
->  How big are the files?
-> (Hint: Look at the options for the `ls` command to see how to show
-> file sizes.)
->
->> ## Solution
->>  
->> ~~~
->> $ ls -l -h
->> ~~~
->> {: .bash}
->> 
->> ~~~
->> -rw-r--r--. 1 markd users 6.5M Jul  1 10:03 NA12873_R1.fq
->> -rw-r--r--. 1 markd users 2.9M Jul  1 10:03 NA12873_R2.fq.gz
->> -rw-r--r--. 1 markd users 2.7M Jul  1 10:03 NA12874_R1.fq.gz
->> -rw-r--r--. 1 markd users 2.7M Jul  1 10:03 NA12874_R2.fq.gz
->> -rw-r--r--. 1 markd users 2.1M Jul  1 10:03 NA12878_R1.fq.gz
->> -rw-r--r--. 1 markd users 2.2M Jul  1 10:03 NA12878_R2.fq.gz
->> ~~~
->> {: .output}
->> 
->> There are six FASTQ files ranging from 2.1M  to 6.5M. 
->> 
-> {: .solution}
-{: .challenge}
 
-FastQC can accept multiple file names as input, and on both zipped and unzipped files, so we can use the \*.fq* wildcard to run FastQC on all of the FASTQ files in this directory.
+The command used to run FastQC is called `fastqc`, and is **case-sensitive**. FastQC can accept multiple file names as input, and on both zipped and unzipped files, so we can use the \*.fq* wildcard to run FastQC on all of the fastq files in this directory.
 
 ~~~
 $ fastqc *.fq* 
@@ -353,8 +326,8 @@ Approx 20% complete for NA12873_R1.fq.gz
 ~~~
 {: .output}
 
-In total, it should take about five minutes for FastQC to run on all
-six of our FASTQ files. When the analysis completes, your prompt
+In total, it should take about one minute for FastQC to run on all
+our FASTQ files. When the analysis completes, your prompt
 will return. So your screen will look something like this:
 
 ~~~
@@ -414,14 +387,36 @@ $ cd ~/dc_workshop/results/fastqc_untrimmed_reads/
 
 
 
-## Viewing the FastQC results
+## Combining reports
+
+For projects involving a large number of samples, it is more convenient to consolidate all QC reports into a single page. This allows any trends and outliers to be identified more easily. A popular tool for doing this is called `multiqc` and can recognise the Quality Control output from a variety of tools including `fastqc`.
+
+
+> ## Exercise
+> 
+>  Find and load the module that provides the `multiqc` tool. Consult the help page for `multiqc` (`multiqc -h`) and / or online resources to generate a combined QC report from the FastQC output that you have just generated
+>
+>> ## Solution
+>>  The multiqc tool has one compulsory argument which corresponds to the directory containing QC reports. This can be the current working directory; `.`
+>> ~~~
+>> $ multiqc .
+>> ~~~
+>> {: .bash}
+>> 
+>> 
+> {: .solution}
+{: .challenge}
+
+
+
+## Viewing the multiqc results
 
 If we were working on our local computers, we'd be able to look at 
 each of these HTML files by opening them in a web browser.
 
 However, these files are currently sitting on our remote AWS 
 instance, where our local computer can't see them.
-And, since we are only logging into the AWS instance via the 
+And, since we are only logging into the HPC via the 
 command line - it doesn't have any web browser setup to display 
 these files either.
 
@@ -465,6 +460,7 @@ directory we just created `~/Desktop/fastqc_html`.
 You should see a status output like this:
 
 ~~~
+multiqc_report.html                           100% 1164KB   1.4MB/s   00:00
 NA12873_R1_fastqc.html                      100%  249KB 152.3KB/s   00:01    
 NA12873_R2_fastqc.html                      100%  254KB 219.8KB/s   00:01    
 NA12874_R1_fastqc.html                      100%  254KB 271.8KB/s   00:00    
@@ -474,7 +470,7 @@ NA12878_R2_fastqc.html                      100%  251KB 592.2KB/s   00:00
 ~~~
 {: .output}
 
-Now we can go to our new directory and open the 6 HTML files. 
+Now we can go to our new directory and open the multiqc report, or the individual reports if we wish. 
 
 Depending on your system, 
 you should be able to select and open them all at once via a right click menu
@@ -492,7 +488,8 @@ in your file browser.
 > {: .solution}
 {: .challenge}
 
-## Decoding the other FastQC outputs
+
+## Decoding the other FastQC outputs -- Optional 
 We've now looked at quite a few "Per base sequence quality" FastQC graphs, but there are nine other graphs that we haven't talked about! Below we have provided a brief overview of interpretations for each of these plots. For more information, please see the FastQC documentation [here](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) 
 
 + [**Per tile sequence quality**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/12%20Per%20Tile%20Sequence%20Quality.html): the machines that perform sequencing are divided into tiles. This plot displays patterns in base quality along these tiles. Consistently low scores are often found around the edges, but hot spots can also occur in the middle if an air bubble was introduced at some point during the run. 
@@ -506,25 +503,6 @@ We've now looked at quite a few "Per base sequence quality" FastQC graphs, but t
 + [**Adapter Content**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/10%20Adapter%20Content.html): a graph indicating where adapater sequences occur in the reads.
 + [**K-mer Content**](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/11%20Kmer%20Content.html): a graph showing any sequences which may show a positional bias within the reads.
 
-## Combining reports
-
-For projects involving a large number of samples, it is more convenient to consolidate all QC reports into a single page. This allows any trends and outliers to be identified more easily. A popular tool for doing this is called `multiqc` and can recognise the Quality Control output from a variety of tools including `fastqc`.
-
-
-> ## Exercise
-> 
->  Find and load the module that provides the `multiqc` tool. Consult the help page for `multiqc` and generate a combined QC report from the fastqc output that you have just generated
->
->> ## Solution
->>  The multiqc tool has one compulsory argument which corresponds to the directory containing QC reports. This can be the current working directory; `.`
->> ~~~
->> $ multiqc .
->> ~~~
->> {: .bash}
->> 
->> 
-> {: .solution}
-{: .challenge}
 
 
 # Other notes  -- Optional 
