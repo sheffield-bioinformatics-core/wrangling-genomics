@@ -28,6 +28,12 @@ editor_options:
 
 We are going to use a sequencing dataset from healthy humans. 
 
+
+- **What is Genome sequencing**
+  - Genome sequencing (sometimes called *next-generation sequencing* (NGS) or high throughput sequencing) is the process by which small stretches of an individuals' DNA are "read" to see which bases (A, T, C or G) they are comprised of. These reads are they compared to a reference genome to see where they originated from and what mutations are present. Mutations, differences in DNA sequence between individuals, are not always harmful and can be responsible in normal variations such as eye colour. However, some mutations have the potential to lead to the progression of disease. The most popular method of sequencing is that employed by Illumina, which is demonstrated in this short video.
+  
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fCd6B5HRaZ8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
  - **What is the 1000 genomes project**
     - The 1000 genomes project was established in 2008 to study variation in the *human genome* and provide a solid foundation on which to build an understanding of genetic variation in the human population.
     
@@ -63,7 +69,7 @@ This metadata describes information on the samples sequences as part of the data
 
 > ## Challenge
 > 
-> Based on the metadata, can you answer the following questions?
+> Based on the metadata, can you answer the following questions using a spreadsheet such as Excel?
 > 
 > 1. How many rows and how many columns are in this data?
 > 2. How many different super populations are there?
@@ -77,5 +83,12 @@ This metadata describes information on the samples sequences as part of the data
 > {: .solution}
 {: .challenge}
 
+> ## Creating and editing metadata
+> 
+> The metadata for a project is usually entered *by-hand* using software such as Microsoft Excel. When creating such metadata it would be good to bear in mind some common errors that can be inadvertently introduced that complicate computational analysis. These materials from Data Carpentry can be consulted if you are not sure about this:-[https://datacarpentry.org/spreadsheet-ecology-lesson/02-common-mistakes/index.html](https://datacarpentry.org/spreadsheet-ecology-lesson/02-common-mistakes/index.html)
+
+
+
+{: .callout}
 
 
