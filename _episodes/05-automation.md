@@ -62,7 +62,7 @@ Notice that in this `for` loop, we used two variables, `infile`, which was defin
 > Within the Bash shell you can create variables at any time (as we did
 > above, and during the 'for' loop lesson). Assign any name and the
 > value using the assignment operator: '='. You can check the current
-> definition of your variable by typing into your script: echo $variable_name.
+> definition of your variable by typing into your script: `echo $variable_name`.
 {: .callout}
 
 In this lesson, we'll use two shell scripts to automate the variant calling analysis: one for FastQC analysis (including creating the `multiqc` summary), and a second for the remaining variant calling. To write a script to run our FastQC analysis, we'll take each of the commands we entered to run FastQC and process the output files and put them into a single file with a `.sh` extension. The `.sh` is not essential, but serves as a reminder to ourselves and to the computer that this is a shell script.
@@ -105,7 +105,7 @@ cd ~/dc_workshop/data/untrimmed_fastq/
 {: .output}
 
 These next two lines will give us a status message to tell us that we are currently running FastQC, then will run FastQC
-on all of the files in our current directory with a `.fastq` extension. 
+on all of the files in our current directory with a `.fq` extension. 
 
 ~~~
 echo "Running FastQC ..."
