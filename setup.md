@@ -3,7 +3,6 @@ layout: page
 title: Setup
 ---
 
-This workshop is designed to be run on pre-imaged Amazon Web Services 
-(AWS) instances. For information about how to
-use the workshop materials, see the 
-[setup instructions](http://www.datacarpentry.org/genomics-workshop/setup.html) on the main workshop page.
+
+See the setup instructions for
+the associated [Introduction to Using the Shell in a High-Performance Computing Context (hpc-shell)](https://rse.shef.ac.uk/hpc-shell-tuos-citc/setup.html) lesson.
