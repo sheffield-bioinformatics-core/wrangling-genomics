@@ -10,6 +10,8 @@ objectives:
 keypoints:
 - "Quality encodings vary across sequencing platforms."
 - "FastQC and multiqc can generate quality control reports for sequencing data"
+- "Keep your project directories tidy"
+- "Files can be copied from HPC to your own machine for interactive visualisation"
 ---
 <img src="../img/logo-sm.png" align=right>
 
@@ -438,15 +440,15 @@ For projects involving a large number of samples, it is more convenient to conso
 
 > ## Exercise
 > 
->  Having FastQC write output in the current directory and move the results afterwards seems a bit cumbersome. Looking at the help for fastqc, can you see a way of specifying a different directory for the output?
+>  Having FastQC write output in the current directory and move the results afterwards seems a bit cumbersome. Looking at the help for fastqc, can you see a way of specifying a different directory for the output? Delete the current contents of `~/dc_workshop/results/fastqc_untrimmed_reads/ ` and re-run `fastqc` to output files directly to this directory.
 >
 >> ## Solution
 >>  `fastqc` has an option `-o` which can be used to specify an output directory
 >> ~~~
->> $ rm untrimmed_reads_fastq/*
->> $ ls untrimmed_reads_fastq/
->> $ fastqc *.fq* -o untrimmed_reads_fastq
->> $ ls untrimmed_reads_fastq/
+>> $ rm ~/dc_workshop/results/fastqc_untrimmed_reads/ *
+>> $ ls ~/dc_workshop/results/fastqc_untrimmed_reads/ 
+>> $ fastqc *.fq* -o ~/dc_workshop/results/fastqc_untrimmed_reads/ 
+>> $ ls ~/dc_workshop/results/fastqc_untrimmed_reads/ 
 >> ~~~
 >> {: .bash}
 >> 
