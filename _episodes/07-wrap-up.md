@@ -17,14 +17,16 @@ keypoints:
 
 # Next steps: Workflow Managers and Reproducible Pipelines
 
-At this point in the course we hope that you have gained an understanding of what it means to write and run a Bioinformatics script on HPC infrastructure; and how to troubleshoot if things goes wrong. 
+At this point in the course we hope that you have gained an understanding of what it means to write and run a Bioinformatics script on HPC infrastructure; and how to request appropriate resources. 
 
 However, in practice we would **not** recommend that you now start to write and develop your own pipelines from scratch. In all researchers wrote their own pipelines from scratch, this would lead to a huge amount of redundancy and discrepancies in the manner in which data are processed. 
 
 Many Bioinformaticians instead prefer to use tried-and-tested *best practice* pipelines for data processing; especially for steps such as alignment where the tools are established, well-understood and don't usually require much intervention from the user. 
 
 
-A few *workflow manager* tools also exist, the purpose of which is to manage to monitor the submission of jobs without requiring the user to monitor the workflow and manage scripts that are dependent on the outputs of others. In other words, alignment of samples will automatically be triggered once the workflow manager detects that trimming has been completed; even if the commands to perform trimming and alignment are found in different scripts.
+You probably noticed that our current pipeline for processing involves each step in the variant-calling workflow. If an error occurs and we have to stop and re-start the script, it will start by indexing the reference genome and aligning the data; even if these steps were completed successfully the previous time.
+
+A few *workflow manager* tools exist, the purpose of which is to manage and monitor the submission of jobs without requiring the user to monitor the workflow and manage scripts that are dependent on the outputs of others. In other words, alignment of samples will automatically be triggered once the workflow manager detects that trimming has been completed; even if the commands to perform trimming and alignment are found in different scripts.
 
 A few tools that the Sheffield Bioinformatics Core recommends are:-
 

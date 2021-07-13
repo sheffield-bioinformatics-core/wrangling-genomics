@@ -7,11 +7,10 @@ questions:
 objectives:
 - "Write a shell script with multiple variables."
 - "Incorporate a `for` loop into a shell script."
-- "Submit a script to a HPC"
 keypoints:
 - "We can combine multiple commands into a shell script to automate a workflow."
 - "Use `echo` statements within your scripts to get an automated progress update."
-- "Shell scripts can be run on a HPC environment"
+- "We can give names to our output files and directories using variables"
 ---
 
 <img src="../img/logo-sm.png" align=right>
@@ -376,7 +375,7 @@ We can use the `base` variable to access both the `base_1.fq` and `base_2.fq` in
     variants=~/dc_workshop/results/vcf/${base}_chr20.vcf
     variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered
     annovar_input=~/dc_workshop/results/vcf_annotated/${base}_avinput 
-    annovar_db=~/mnt/shared/annovar_db/humandb
+    annovar_db=/mnt/shared/annovar_db/humandb
 
 ~~~
 {: .bash}
