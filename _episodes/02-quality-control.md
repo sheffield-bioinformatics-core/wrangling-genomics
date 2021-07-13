@@ -320,6 +320,11 @@ Now let's take a look at a quality plot on the other end of the spectrum.
 
 Here, we see positions within the read in which the boxes span a much wider range. Also, quality scores drop quite low into the "bad" range, particularly on the tail end of the reads. The FastQC tool produces several other diagnostic plots to assess sample quality, in addition to the one plotted above. 
 
+> ## Input data for FastQC
+> 
+> FastQC doesn't *know* what kind of sequencing experiment you have performed, and for this reason it is widely-used on all types of sequencing datasets (DNA-seq, RNA-seq, ChIP-seq...). You will probably come across it at some point so it worth being familiar with, even if some parts of the workshop aren't directly applicable to your project.
+{: .callout}
+
 ## Running FastQC  
 
 We will now assess the quality of the reads that we downloaded. First, make sure you're still in the `untrimmed_fastq` directory
@@ -431,7 +436,23 @@ For projects involving a large number of samples, it is more convenient to conso
 > {: .solution}
 {: .challenge}
 
-
+> ## Exercise
+> 
+>  Having FastQC write output in the current directory and move the results afterwards seems a bit cumbersome. Looking at the help for fastqc, can you see a way of specifying a different directory for the output?
+>
+>> ## Solution
+>>  `fastqc` has an option `-o` which can be used to specify an output directory
+>> ~~~
+>> $ rm untrimmed_reads_fastq/*
+>> $ ls untrimmed_reads_fastq/
+>> $ fastqc *.fq* -o untrimmed_reads_fastq
+>> $ ls untrimmed_reads_fastq/
+>> ~~~
+>> {: .bash}
+>> 
+>> 
+> {: .solution}
+{: .challenge}
 
 ## Viewing the multiqc results
 
