@@ -52,12 +52,12 @@ Here we are using the `-p` option for `mkdir`. This option allows `mkdir` to cre
 mkdir -p ~/dc_workshop/data/untrimmed_fastq/
 cd ~/dc_workshop/data/untrimmed_fastq
 
-scp /mnt/shared/1000_genomes_subset/NA12873_R1.fq.gz .
-scp /mnt/shared/1000_genomes_subset/NA12873_R2.fq.gz .
-scp /mnt/shared/1000_genomes_subset/NA12874_R1.fq.gz .
-scp /mnt/shared/1000_genomes_subset/NA12874_R2.fq.gz .
-scp /mnt/shared/1000_genomes_subset/NA12878_R1.fq.gz .
-scp /mnt/shared/1000_genomes_subset/NA12878_R2.fq.gz .
+cp /mnt/shared/1000_genomes_subset/NA12873_R1.fq.gz .
+cp /mnt/shared/1000_genomes_subset/NA12873_R2.fq.gz .
+cp /mnt/shared/1000_genomes_subset/NA12874_R1.fq.gz .
+cp /mnt/shared/1000_genomes_subset/NA12874_R2.fq.gz .
+cp /mnt/shared/1000_genomes_subset/NA12878_R1.fq.gz .
+cp /mnt/shared/1000_genomes_subset/NA12878_R2.fq.gz .
 
 ~~~
 {: .bash}
@@ -67,7 +67,7 @@ scp /mnt/shared/1000_genomes_subset/NA12878_R2.fq.gz .
 > If that seems like a lot of typing, so you can use "wild-cards" as we have seen previously to copy everything in one go
 > 
 > ~~~
-> $ scp /mnt/shared/1000_genomes_subset/*.fq.gz .
+> $ cp /mnt/shared/1000_genomes_subset/*.fq.gz .
 > ~~~
 > {: .bash}
 > 
@@ -478,7 +478,7 @@ in your file browser.
 
 > ## Exercise
 > 
-> Discuss your results with a neighbor. Which sample(s) looks the best
+> Discuss your results with your breakout group. Which sample(s) looks the best
 > in terms of per base sequence quality? Which sample(s) look the
 > worst?
 > 

@@ -23,7 +23,7 @@ If you were unable to complete the previous section on Trimming, or it was skipp
 ~~~
 $ cd ~/dc_workshop
 $ mkdir -p data/trimmed_fastq
-$ scp /mnt/shared/1000_genomes_subset/trimmed_fastq/*.trim.fq.gz data/trimmed_fastq
+$ cp /mnt/shared/1000_genomes_subset/trimmed_fastq/*.trim.fq.gz data/trimmed_fastq
 ~~~
 {: .bash}
 
@@ -59,7 +59,11 @@ $ gunzip data/ref_genome/chr20.fa.gz
 
 > ## Downloading genome reference files
 > For convenience, we have downloaded our reference file from the UCSC resource as it provides reference files on a per-chromosome basis. In pratice, you will probably want to download an entire genome for your variant calling. Moreover, you might have a reference organism other than human.
-> Reference genomes for a variety of organisms can be found on [Ensembl](https://www.ensembl.org/Homo_sapiens/Info/Index).
+> Reference genomes for a variety of organisms can be found on [Ensembl](https://www.ensembl.org/Homo_sapiens/Info/Index) (you can navigate to other organisms of interest from here).
+{: .callout}
+
+> ## Is the genome already available locally?
+> However, it wouldn't be very sensible for each Bioinformatics researcher on the cluster to have their own copy. Reference genomes can be many Gb in size, and in addition to that they have to be processed in order that alignment tools can use them more efficiently (see later). Before embarking on downloading and processing your own genomes, it would be good to check with colleagues that they don't already have a copy in a shared location that you can use. If your based in Sheffield, you can ask the Sheffield Bioinformatics Core for advice.
 {: .callout}
 
 
