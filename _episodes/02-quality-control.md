@@ -88,6 +88,29 @@ $ gunzip NA12873_R1.fq.gz
 > The files we are processing are known as "fastq", but as we mentioned previously command-line systems are not fussy about what extension a particular file has. The files in our dataset all end `.fq.gz`, but you might come across files that end in `.fastq.gz`. It shouldn't matter to the software you use, so long as they contents are laid out (formatted) according to the same specification. 
 {: .callout}
 
+## Checking the file transfer with md5sums
+
+When moving or copying large files around, it would be wise to check that the file transfer was successful. A common way of doing this is to compute a checksum for each of the files. A checksum is 
+
+> "a small-size datum from a block of digital data for the purpose of detecting errors which may have been introduced during its transmission or storage"
+
+You can think of it as a digital fingerprint of a file, and if the contents of the file are changed in any way, a different checksum will be generated. The person making files available to you will often generate a checksum on their system and make the results available. Here, we look at the checksums generated for the example dataset and make a copy.
+
+~~~
+$ cp /mnt/shared/1000_genomes_subset/md5sums.txt .
+$ cat md5sums.txt
+~~~
+{: .bash}
+
+We can re-generate the checksums and if they agree
+
+~~~
+$ md5sum NA12873_R2.fq.gz
+$ md5sum -c md5sums.txt
+~~~
+{: .bash}
+
+
 # Quality Control
 
 We will now assess the quality of the sequence reads contained in our fastq files. 
