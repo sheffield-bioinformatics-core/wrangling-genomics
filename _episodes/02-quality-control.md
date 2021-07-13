@@ -76,12 +76,6 @@ cp /mnt/shared/1000_genomes_subset/NA12878_R2.fq.gz .
 {: .callout}
 
 
-The data comes in a compressed format, which is why there is a `.gz` at the end of the file names. This makes it faster to transfer, and allows it to take up less space on our computer. Let's unzip one of the files so that we can look at the fastq format.
-
-~~~
-$ gunzip NA12873_R1.fq.gz
-~~~
-{: .bash}
 
 > ## File extensions
 > 
@@ -107,6 +101,13 @@ We can re-generate the checksums and if they agree
 ~~~
 $ md5sum NA12873_R2.fq.gz
 $ md5sum -c md5sums.txt
+~~~
+{: .bash}
+
+The data comes in a compressed format, which is why there is a `.gz` at the end of the file names. This makes it faster to transfer, and allows it to take up less space on our computer. Let's unzip one of the files so that we can look at the fastq format.
+
+~~~
+$ gunzip NA12873_R1.fq.gz
 ~~~
 {: .bash}
 
