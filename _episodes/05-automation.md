@@ -439,6 +439,7 @@ table_annovar.pl $annovar_input $annovar_db -buildver hg38 -out $base_final -rem
 > $ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
 > $ do 
 > $ bwa index $genome
+> ~~~
 > {: .bash}
 >> ## Solution
 >>  You would be repeating the index procedure for each new sample, which would be uneccesary and (admitedly not in this case) could be costly in terms of time and memory.
