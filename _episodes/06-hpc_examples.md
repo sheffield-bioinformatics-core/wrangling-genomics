@@ -14,6 +14,9 @@ keypoints:
 
 ---
 
+<img src="../img/logo-sm.png" align=right>
+
+
 # Submitting a script as a batch job
 
 We successfully written a script to automate our analysis. However, we are not taking full advantage of the features that a HPC system offers us. As saw previously, a batch script may be submitted to a scheduler for execution on one of the computing nodes.

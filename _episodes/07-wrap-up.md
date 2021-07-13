@@ -13,6 +13,7 @@ keypoints:
 
 ---
 
+<img src="../img/logo-sm.png" align=right>
 
 # Next steps: Workflow Managers and Reproducible Pipelines
 

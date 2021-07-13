@@ -13,6 +13,10 @@ keypoints:
 - "Use `echo` statements within your scripts to get an automated progress update."
 - "Shell scripts can be run on a HPC environment"
 ---
+
+<img src="../img/logo-sm.png" align=right>
+
+
 # What is a shell script?
 
 You wrote a simple shell script in a [previous lesson](http://www.datacarpentry.org/shell-genomics/05-writing-scripts/) that we used to extract bad reads from our

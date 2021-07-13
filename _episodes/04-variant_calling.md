@@ -14,6 +14,9 @@ keypoints:
 - "There are many different file formats for storing genomics data. It's important to understand what type of information is contained in each file, and how it was derived."
 ---
 
+<img src="../img/logo-sm.png" align=right>
+
+
 We mentioned before that we are working with files from the 1000 genomes project. Now that we have looked at our data to make sure that it is high quality, and removed low-quality base calls, we can perform variant calling to see how the population changed over time. We care what mutations these individuals have relative to a *typical* individual. Therefore, we will align each of our samples to chromosome 20 of the human reference genome and see what differences exist in our reads versus the genome.
 
 # Input files for this section
