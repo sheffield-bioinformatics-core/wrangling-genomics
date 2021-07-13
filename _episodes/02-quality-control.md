@@ -445,7 +445,7 @@ For projects involving a large number of samples, it is more convenient to conso
 >> ## Solution
 >>  `fastqc` has an option `-o` which can be used to specify an output directory
 >> ~~~
->> $ rm ~/dc_workshop/results/fastqc_untrimmed_reads/ *
+>> $ rm ~/dc_workshop/results/fastqc_untrimmed_reads/*
 >> $ ls ~/dc_workshop/results/fastqc_untrimmed_reads/ 
 >> $ fastqc *.fq* -o ~/dc_workshop/results/fastqc_untrimmed_reads/ 
 >> $ ls ~/dc_workshop/results/fastqc_untrimmed_reads/ 
