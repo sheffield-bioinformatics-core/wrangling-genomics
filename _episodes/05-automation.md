@@ -109,7 +109,7 @@ cd ~/dc_workshop/data/untrimmed_fastq/
 {: .output}
 
 These next two lines will give us a status message to tell us that we are currently running FastQC, then will run FastQC
-on all of the files in our current directory with a `.fq` extension. 
+on all of the files in our current directory with a `.fq` or `fq.gz` extension. 
 
 ~~~
 echo "Running FastQC ..."
@@ -274,7 +274,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered
     
     annovar_input=~/dc_workshop/results/vcf_annotated/${base}_avinput 
-    annovar_db=~/mnt/shared/annovar_db/humandb
+    annovar_db=/mnt/shared/annovar_db/humandb
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
     samtools sort -o $sorted_bam $bam 
@@ -292,6 +292,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     
     table_annovar.pl $annovar_input $annovar_db -buildver hg38 -out ${base}_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
 
+    done
 
 ~~~
 {: .output}
@@ -355,7 +356,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
 ~~~
 {: .bash}
 
-We then extract the base name of the file (excluding the path and `.fq` extension) and assign it
+We then extract the base name of the file (excluding the path and `.fq.gz` extension) and assign it
 to a new variable called `base`. 
 ~~~
     base=$(basename $fq1 _R1.trim.fq.gz)
@@ -430,6 +431,21 @@ table_annovar.pl $annovar_input $annovar_db -buildver hg38 -out $base_final -rem
 ~~~
 {: .output}
 
+
+> ## Exercise
+> 
+>  What would it be a mistake to start the `for` loop like this?
+> ~~~
+> $ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
+> $ do 
+> $ bwa index $genome
+> {: .bash}
+>> ## Solution
+>>  You would be repeating the index procedure for each new sample, which would be uneccesary and (admitedly not in this case) could be costly in terms of time and memory.
+>> 
+>> 
+> {: .solution}
+{: .challenge}
 
 > ## Exercise
 > It's a good idea to add comments to your code so that you (or a collaborator) can make sense of what you did later. 

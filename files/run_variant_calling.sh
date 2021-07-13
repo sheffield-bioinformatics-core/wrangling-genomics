@@ -30,7 +30,7 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     variants_filtered=~/dc_workshop/results/vcf/${base}_chr20_filtered
     
     annovar_input=~/dc_workshop/results/vcf_annotated/${base}_avinput 
-    annovar_db=~/mnt/shared/annovar_db/humandb
+    annovar_db=/mnt/shared/annovar_db/humandb
     bwa mem $genome $fq1 $fq2 > $sam
     samtools view -S -b $sam > $bam
     samtools sort -o $sorted_bam $bam 

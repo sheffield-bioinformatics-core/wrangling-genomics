@@ -61,12 +61,15 @@ $ gunzip data/ref_genome/chr20.fa.gz
 
 
 > ## Downloading genome reference files
-> For convenience, we have downloaded our reference file from the UCSC resource as it provides reference files on a per-chromosome basis. In pratice, you will probably want to download an entire genome for your variant calling. Moreover, you might have a reference organism other than human.
+> For convenience, we have downloaded our reference file from the UCSC resource as it provides reference files on a per-chromosome basis. In practice, you will probably want to download an entire genome for your variant calling. Moreover, you might have a reference organism other than human.
 > Reference genomes for a variety of organisms can be found on [Ensembl](https://www.ensembl.org/Homo_sapiens/Info/Index) (you can navigate to other organisms of interest from here).
+
+![ensembl_species](../img/ensembl_species.PNG)
+
 {: .callout}
 
 > ## Is the genome already available locally?
-> However, it wouldn't be very sensible for each Bioinformatics researcher on the cluster to have their own copy. Reference genomes can be many Gb in size, and in addition to that they have to be processed in order that alignment tools can use them more efficiently (see later). Before embarking on downloading and processing your own genomes, it would be good to check with colleagues that they don't already have a copy in a shared location that you can use. If your based in Sheffield, you can ask the Sheffield Bioinformatics Core for advice.
+> However, it wouldn't be very sensible for each Bioinformatics researcher on the cluster to have their own copy. Reference genomes can be many Gb in size, and in addition to that they have to be processed in order that alignment tools can use them more efficiently (see later). Before embarking on downloading and processing your own genomes, it would be good to check with colleagues that they don't already have a copy in a shared location that you can use. If you're based in Sheffield, you can ask the Sheffield Bioinformatics Core for advice.
 {: .callout}
 
 
@@ -432,7 +435,7 @@ vcftools --vcf results/vcf/NA12873_chr20.vcf --minQ 20 --recode --recode-INFO-al
 ~~~
 {:bash}
 
-Depending on our application, we might also want to discard variants that are common in healthy individuals. Researchers often want to prioritise mutations that are likely to have biological consequences. We can only these types of question once we have annotated our calls against databases of previously identified mutations.
+Depending on our application, we might also want to discard variants that are common in healthy individuals. Researchers often want to prioritise mutations that are likely to have biological consequences. We can only answer these types of question once we have annotated our calls against databases of previously identified mutations.
 
 ## Variant Annotation
 
