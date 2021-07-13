@@ -47,3 +47,5 @@ for fq1 in ~/dc_workshop/data/trimmed_fastq/*_R1.trim.fq.gz
     cd ~/dc_workshop/results/vcf_annotated/
     
     table_annovar.pl $annovar_input $annovar_db -buildver hg38 -out ${base}_final -remove -protocol refGene,1000g2015aug_all,cosmic70,dbnsfp30a -operation g,f,f,f -nastring NA -csvout
+
+    done
